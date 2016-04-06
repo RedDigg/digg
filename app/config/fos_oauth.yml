@@ -1,0 +1,8 @@
+fos_oauth_server:
+    db_driver:           orm
+    client_class:        Red\CoreBundle\Entity\Client
+    access_token_class:  Red\CoreBundle\Entity\AccessToken
+    refresh_token_class: Red\CoreBundle\Entity\RefreshToken
+    auth_code_class:     Red\CoreBundle\Entity\AuthCode
+    service:
+        user_provider: fos_user.user_manager  # This property will be used when valid credentials are given to load the user upon access token creation
