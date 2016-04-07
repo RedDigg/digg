@@ -1,0 +1,98 @@
+<?php
+
+namespace Red\EntriesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Blameable\Traits\BlameableEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\MaxDepth;
+use JMS\Serializer\Annotation as JMS;
+use FOS\CommentBundle\Entity\Comment as BaseComment;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table()
+ * @ExclusionPolicy("all")
+ * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
+ */
+class Entry extends BaseComment
+{
+
+    /**
+     * Hook SoftDeleteable behavior
+     * updates deletedAt field
+     */
+//    use SoftDeleteableEntity;
+//    use BlameableEntity;
+//    use TimestampableEntity;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
+     * @JMS\Groups({"list"})
+     */
+    protected $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Red\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false)
+     * @Expose
+     * @MaxDepth(3)
+     * @JMS\Groups({"list"})
+     */
+    private $user;
+
+    /**
+     * @ORM\Column(type="text")
+     * @Expose
+     * @JMS\Groups({"list"})
+     */
+    protected $body;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @Expose
+     * @JMS\Groups({"list"})
+     */
+    private $uv;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @Expose
+     * @JMS\Groups({"list"})
+     */
+    private $dv;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @Expose
+     * @JMS\Groups({"list"})
+     */
+    private $voteCount;
+
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $publicIP;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $privateIP;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Red\EntriesBundle\Entity\EntryVoters", mappedBy="entry")
+     * @Expose
+     * @JMS\Groups({"list"})
+     */
+    private $voters;
+
+
+}
