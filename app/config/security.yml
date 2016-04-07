@@ -20,7 +20,7 @@ security:
             security: false
 
         api:
-            pattern: ^/api/                            # All URLs are protected
+            pattern: ^/aa/                            # All URLs are protected
             fos_oauth: true                            # OAuth2 protected resource
             stateless: true                            # Do no set session cookies
             anonymous: false                           # Anonymous access is not allowed

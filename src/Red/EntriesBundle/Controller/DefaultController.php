@@ -46,10 +46,10 @@ class DefaultController extends BaseController
      *
      * @ApiDoc(
      *  resource=true,
-     *  description="Returns user information",
+     *  description="Returns entry data",
      *
      *  output={
-     *   "class"="Red\EntriesBundle\Entity\Entry",
+     *   "class"="Red\EntriesBundle\Entity\EntryComment",
      *   "parsers"={"Nelmio\ApiDocBundle\Parser\JmsMetadataParser"},
      *   "groups"={"list"}
      *  }
@@ -63,6 +63,7 @@ class DefaultController extends BaseController
             ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
             ->setData($entry);
     }
+
 
     /**
      * @Rest\Post("/new")
@@ -86,6 +87,7 @@ class DefaultController extends BaseController
             ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
             ->setData(['lala']);
     }
+
 
     /**
      * @Rest\Put("/{entry}", requirements={"entry" = "\d+"})
@@ -115,5 +117,10 @@ class DefaultController extends BaseController
             ->setFormat('json')
             ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
             ->setData([1]);
+    }
+
+    public function testAction()
+    {
+        return $this->render('EntriesBundle:Default:index.html.twig', []);
     }
 }

@@ -1,1 +1,441 @@
-Hello World!
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<style>
+    /*
+ * Globals
+ */
+
+    body {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        color: #555;
+    }
+
+    h1, .h1,
+    h2, .h2,
+    h3, .h3,
+    h4, .h4,
+    h5, .h5,
+    h6, .h6 {
+        margin-top: 0;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: normal;
+        color: #333;
+    }
+
+
+    /*
+     * Override Bootstrap's default container.
+     */
+
+    @media (min-width: 1200px) {
+        .container {
+            width: 970px;
+        }
+    }
+
+
+    /*
+     * Masthead for nav
+     */
+
+    .blog-masthead {
+        background-color: #434042;
+        -webkit-box-shadow: inset 0 -2px 5px rgba(0,0,0,.1);
+        box-shadow: inset 0 -2px 5px rgba(0,0,0,.1);
+    }
+
+    /* Nav links */
+    .blog-nav-item {
+        position: relative;
+        display: inline-block;
+        padding: 10px;
+        font-weight: 500;
+        color: #cdddeb;
+    }
+    .blog-nav-item:hover,
+    .blog-nav-item:focus {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    /* Active state gets a caret at the bottom */
+    .blog-nav .active {
+        color: #fff;
+    }
+    .blog-nav .active:after {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 0;
+        margin-left: -5px;
+        vertical-align: middle;
+        content: " ";
+        border-right: 5px solid transparent;
+        border-bottom: 5px solid;
+        border-left: 5px solid transparent;
+    }
+
+
+    /*
+     * Blog name and description
+     */
+
+    .blog-header {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    .blog-title {
+        margin-top: 30px;
+        margin-bottom: 0;
+        font-size: 60px;
+        font-weight: normal;
+    }
+    .blog-description {
+        font-size: 20px;
+        color: #999;
+    }
+
+
+    /*
+     * Main column and sidebar layout
+     */
+
+    .blog-main {
+        font-size: 18px;
+        line-height: 1.5;
+    }
+
+    /* Sidebar modules for boxing content */
+    .sidebar-module {
+        padding: 15px;
+        margin: 0 -15px 15px;
+    }
+    .sidebar-module-inset {
+        padding: 15px;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+    }
+    .sidebar-module-inset p:last-child,
+    .sidebar-module-inset ul:last-child,
+    .sidebar-module-inset ol:last-child {
+        margin-bottom: 0;
+    }
+
+
+    /* Pagination */
+    .pager {
+        margin-bottom: 60px;
+        text-align: left;
+    }
+    .pager > li > a {
+        width: 140px;
+        padding: 10px 20px;
+        text-align: center;
+        border-radius: 30px;
+    }
+
+
+    /*
+     * Blog posts
+     */
+
+    .blog-post {
+        margin-bottom: 60px;
+    }
+    .blog-post-title {
+        margin-bottom: 5px;
+        font-size: 40px;
+    }
+    .blog-post-meta {
+        margin-bottom: 20px;
+        color: #999;
+    }
+
+
+    /*
+     * Footer
+     */
+
+    .blog-footer {
+        padding: 40px 0;
+        color: #999;
+        text-align: center;
+        background-color: #f9f9f9;
+        border-top: 1px solid #e5e5e5;
+    }
+    .blog-footer p:last-child {
+        margin-bottom: 0;
+    }
+</style>
+
+<style>
+    /**
+ * This file is part of the FOSCommentBundle package.
+ *
+ * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+    .fos_comment_thread_show {
+        margin-top: 2em;
+        padding: 1em 20px;
+        width: 472px;
+        background: #f0f0f0;
+        box-shadow: 0 0 7px #bbb;
+        -moz-box-shadow: 0 0 7px #bbb;
+        -webkit-box-shadow: 0 0 7px #bbb;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+    }
+
+    .fos_comment_thread_show h3 {
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-bottom: 1em;
+        color: #a0a0a0;
+    }
+
+    .fos_comment_comment_show {
+        color: #555;
+    }
+
+    .fos_comment_comment_show .fos_comment_comment_show {
+        margin-left: 50px;
+    }
+
+    .fos_comment_comment_metas {
+        margin: 1.5em 0 0.5em 0;
+        padding: 1em 20px;
+        background: #e6e6e6;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+    }
+
+    #fos_comment_comment_body {
+        width: 100%;
+        height: 60px;
+    }
+    .fos_comment_comment_body {
+        line-height: 1.5em;
+    }
+
+    .fos_comment_comments .fos_comment_comments {
+        margin-left: 2em;
+    }
+
+    .fos_comment_comment_reply {
+        text-align: right;
+    }
+
+    .fos_comment_comment_reply.replying {
+        text-align: left;
+        margin-top: 1em;
+        padding: 1em 20px;
+        background: #d6d6d6;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+    }
+
+    .fos_comment_comment_reply_show_form {
+        padding: 2px 5px;
+        font-size: 0.8em;
+    }
+
+    .fos_comment_comment_reply.fos_comment_replying button.fos_comment_comment_reply_show_form {
+        display: none;
+    }
+
+    .fos_comment_thread_comments {
+        margin-bottom: 1.5em;
+    }
+
+    .fos_comment_reply_prototype {
+        display: none;
+    }
+
+    .fos_comment_thread_show > form.fos_comment_comment_form {
+        margin-bottom: 1em;
+    }
+
+    form.fos_comment_comment_form.processing {
+        opacity: 0.5;
+    }
+
+    form.fos_comment_comment_form label.author_name {
+        margin-top: 3px;
+        float: left;
+    }
+
+    form.fos_comment_comment_form label.author_name input {
+        padding: 2px 5px;
+    }
+
+    form.fos_comment_comment_form textarea {
+        width: 98%;
+        height: 6em;
+        padding: 1%;
+    }
+
+    form.fos_comment_comment_form.error textarea {
+        border-color: red;
+    }
+
+    .fos_comment_form_errors {
+        color: #ff0000;
+    }
+
+    .fos_comment_submit {
+        text-align: right;
+    }
+
+    .fos_comment_submit input {
+        font-size: 1.2em;
+        padding: 3px 12px;
+        margin-top: 3px;
+    }
+
+    a.fos_comment_thread_feed {
+        width: 16px;
+        height: 16px;
+        display: block;
+        float: right;
+    }
+
+    .fos_comment_comment_voting {
+        float: right;
+    }
+
+    .fos_comment_comment_score {
+        display: inline-block;
+    }
+</style>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Blog Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+
+    <!-- Custom styles for this template -->
+    <link href="blog.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="blog-masthead">
+    <div class="container">
+        <nav class="blog-nav">
+            <a class="blog-nav-item active" href="#">Home</a>
+            <a class="blog-nav-item" href="#">New features</a>
+            <a class="blog-nav-item" href="#">Press</a>
+            <a class="blog-nav-item" href="#">New hires</a>
+            {% if app.user %}
+                <a class="blog-nav-item" href="{{ path('fos_user_security_logout') }}">Wyloguj @{{ app.user.username }}</a>
+            {% else %}
+                <a class="blog-nav-item" style="color: indianred;" href="{{ path('fos_user_registration_register') }}">REJESTRACJA</a>
+                <a class="blog-nav-item" style="color: indianred;" href="{{ path('fos_user_security_login') }}">Zaloguj</a>
+            {% endif %}
+        </nav>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="blog-header">
+        <p class="lead blog-description">Lorem sripsum dipsum.</p>
+    </div>
+
+    <div class="row">
+
+            <div class="col-sm-9">
+                {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': app.request.get('entry')} %}
+            </div>
+
+        <div class="col-sm-3 blog-sidebar">
+            <div class="sidebar-module sidebar-module-inset">
+                <h4>About</h4>
+                <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+            </div>
+            <div class="sidebar-module">
+                <h4>Archives</h4>
+                <ol class="list-unstyled">
+                    <li><a href="#">March 2014</a></li>
+                    <li><a href="#">February 2014</a></li>
+                    <li><a href="#">January 2014</a></li>
+                    <li><a href="#">December 2013</a></li>
+                    <li><a href="#">November 2013</a></li>
+                    <li><a href="#">October 2013</a></li>
+                    <li><a href="#">September 2013</a></li>
+                    <li><a href="#">August 2013</a></li>
+                    <li><a href="#">July 2013</a></li>
+                    <li><a href="#">June 2013</a></li>
+                    <li><a href="#">May 2013</a></li>
+                    <li><a href="#">April 2013</a></li>
+                </ol>
+            </div>
+            <div class="sidebar-module">
+                <h4>Elsewhere</h4>
+                <ol class="list-unstyled">
+                    <li><a href="#">GitHub</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Facebook</a></li>
+                </ol>
+            </div>
+        </div><!-- /.blog-sidebar -->
+
+    </div><!-- /.row -->
+
+</div><!-- /.container -->
+
+<footer class="blog-footer">
+    <p>Zajebisty mikroblog by anons.</p>
+    <p>
+        <a href="#">Back to top</a>
+    </p>
+</footer>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="../../dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>

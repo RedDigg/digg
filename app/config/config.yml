@@ -9,6 +9,7 @@ imports:
     - { resource: fos_user.yml }
     - { resource: fos_rest.yml }
     - { resource: fos_oauth.yml }
+    - { resource: fos_comment.yml }
     - { resource: "@EntriesBundle/Resources/config/services.yml" }
     - { resource: "@CoreBundle/Resources/config/services.yml" }
     - { resource: "@UserBundle/Resources/config/services.yml" }
