@@ -6,61 +6,75 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Blameable\Traits\BlameableEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation as JMS;
+use JMS\Serializer\Annotation\MaxDepth;
+use FOS\CommentBundle\Entity\Comment as BaseComment;
+use FOS\CommentBundle\Model\SignedCommentInterface;
+use Red\CoreBundle\Traits\Timestampable;
+use Symfony\Component\Security\Core\User\UserInterface;
+use FOS\CommentBundle\Model\VotableCommentInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table()
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
- *
+ * @ExclusionPolicy("all")
  */
-class EntryComment
+class EntryComment extends BaseComment implements SignedCommentInterface, VotableCommentInterface
 {
 
     /**
      * Hook SoftDeleteable behavior
      * updates deletedAt field
      */
-    use SoftDeleteableEntity;
+//    use SoftDeleteableEntity;
     use BlameableEntity;
-    use TimestampableEntity;
+    use Timestampable;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @ORM\Id
+     * @Expose
+     * @JMS\Groups({"list"})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Red\UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="user", referencedColumnName="id")
+     * @ORM\JoinColumn(name="author", referencedColumnName="id")
+     * @Expose
+     * @JMS\Groups({"list"})
      */
-    private $user;
+    protected $author;
 
     /**
      * @ORM\ManyToOne(targetEntity="Red\EntriesBundle\Entity\Entry")
-     * @ORM\JoinColumn(name="entry", referencedColumnName="id")
+     * @ORM\JoinColumn(name="thread", referencedColumnName="id")
+     *
      */
-    private $entry;
+    protected $thread;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
-    private $text;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @Expose
+     * @JMS\Groups({"list"})
      */
     private $uv;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @Expose
+     * @JMS\Groups({"list"})
      */
     private $dv;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @Expose
+     * @JMS\Groups({"list"})
      */
     private $voteCount;
 
@@ -77,9 +91,61 @@ class EntryComment
 
     /**
      * @ORM\OneToMany(targetEntity="Red\EntriesBundle\Entity\EntryVoters", mappedBy="entry")
+     *
      */
     private $voters;
 
+    /**
+     * @ORM\Column(type="integer")
+     * @Expose
+     * @JMS\Groups({"list"})
+     * @var int
+     */
+    protected $score = 0;
+
+    /**
+     * @Expose
+     * @JMS\Groups({"list"})
+     */
+    protected $body;
+
+    /**
+     * @Expose
+     * @JMS\Groups({"list"})
+     */
+    protected $createdAt;
+    /**
+     * Sets the score of the comment.
+     *
+     * @param integer $score
+     */
+    public function setScore($score)
+    {
+        $this->score = $score;
+    }
+
+    /**
+     * Returns the current score of the comment.
+     *
+     * @return integer
+     */
+    public function getScore()
+    {
+        return $this->score;
+    }
+
+    /**
+     * Increments the comment score by the provided
+     * value.
+     *
+     * @param integer value
+     *
+     * @return integer The new comment score
+     */
+    public function incrementScore($by = 1)
+    {
+        $this->score += $by;
+    }
 
     /**
      * Get id
@@ -89,30 +155,6 @@ class EntryComment
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set text
-     *
-     * @param string $text
-     *
-     * @return EntryComment
-     */
-    public function setText($text)
-    {
-        $this->text = $text;
-
-        return $this;
-    }
-
-    /**
-     * Get text
-     *
-     * @return string
-     */
-    public function getText()
-    {
-        return $this->text;
     }
 
     /**
@@ -235,53 +277,25 @@ class EntryComment
         return $this->privateIP;
     }
 
-    /**
-     * Set user
-     *
-     * @param \Red\UserBundle\Entity\User $user
-     *
-     * @return EntryComment
-     */
-    public function setUser(\Red\UserBundle\Entity\User $user = null)
+    public function setAuthor(UserInterface $author)
     {
-        $this->user = $user;
-
-        return $this;
+        $this->author = $author;
     }
 
-    /**
-     * Get user
-     *
-     * @return \Red\UserBundle\Entity\User
-     */
-    public function getUser()
+    public function getAuthor()
     {
-        return $this->user;
+        return $this->author;
     }
 
-    /**
-     * Set entry
-     *
-     * @param \Red\EntriesBundle\Entity\Entry $entry
-     *
-     * @return EntryComment
-     */
-    public function setEntry(\Red\EntriesBundle\Entity\Entry $entry = null)
+    public function getAuthorName()
     {
-        $this->entry = $entry;
+        if (null === $this->getAuthor()) {
+            return 'Anonymous';
+        }
 
-        return $this;
+        return $this->getAuthor()->getUsername();
     }
 
-    /**
-     * Get entry
-     *
-     * @return \Red\EntriesBundle\Entity\Entry
-     */
-    public function getEntry()
-    {
-        return $this->entry;
-    }
 
     /**
      * Constructor
@@ -324,4 +338,5 @@ class EntryComment
     {
         return $this->voters;
     }
+
 }
