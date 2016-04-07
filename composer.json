@@ -1,10 +1,9 @@
 {
-  "name": "lmalicki/stream",
-  "license": "proprietary",
-  "type": "project",
+  "name": "reddigg/digg",
+  "license": "BSD-3-Clause",
   "autoload": {
     "psr-4": {
-      "": "src/"
+      "Red\\": "src/"
     },
     "classmap": [
       "app/AppKernel.php",
@@ -17,7 +16,7 @@
     }
   },
   "require": {
-    "php": ">=5.5.9",
+    "php": ">=7.0",
     "symfony/symfony": "3.0.*",
     "doctrine/orm": ">=2.5@dev",
     "doctrine/common": ">=2.5@dev",
@@ -60,11 +59,6 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ]
-  },
-  "config": {
-    "platform": {
-      "php": "5.5.9"
-    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
