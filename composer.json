@@ -1,5 +1,5 @@
 {
-  "name": "reddigg/dogg",
+  "name": "reddigg/digg",
   "license": "BSD-3-Clause",
   "autoload": {
     "psr-4": {
