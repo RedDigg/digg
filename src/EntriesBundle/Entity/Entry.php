@@ -8,6 +8,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\Timestampable;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
@@ -33,6 +35,47 @@ class Entry
      */
     protected $id;
 
+    /**
+     * @ORM\Column(type="text")
+     * @Expose
+     * @JMS\Groups({"user","mod","admin"})
+     */
+    protected $body;
 
 
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set body
+     *
+     * @param string $body
+     *
+     * @return Entry
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
+
+        return $this;
+    }
+
+    /**
+     * Get body
+     *
+     * @return string
+     */
+    public function getBody()
+    {
+        return $this->body;
+    }
 }
