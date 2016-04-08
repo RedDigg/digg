@@ -31,9 +31,10 @@ entries:
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 
-account_show:
-    path:     /entries/{entry}/{slug}
-    defaults: { _controller: "EntriesBundle:Default:test", entry: null, slug:null }
+
+entries_entry:
+    path:     /entries/{entry}
+    defaults: { _controller: "EntriesBundle:Default:getEntry", entry: null, _format:"html"}
     requirements:
       entry: \d+
     methods:  [GET]

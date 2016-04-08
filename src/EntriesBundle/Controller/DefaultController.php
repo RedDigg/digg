@@ -2,6 +2,7 @@
 
 namespace EntriesBundle\Controller;
 
+use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
 use CoreBundle\Controller\BaseController;
@@ -38,11 +39,16 @@ class DefaultController extends BaseController
     }
 
     /**
-     * @Rest\Get("/{entry}", requirements={"entry" = "\d+"})
+     * @Rest\Get(
+     *     "/{entry}.{_format}",
+     *     requirements={"entry" = "\d+"},
+     *     defaults = { "_format" = "json" }
+     * )
+     *
      * @Rest\View(serializerGroups={"user","mod","admin"})
      * @param Entry $entry
      * @return View
-     *
+     * @throws \NotFoundHttpException*
      *
      * @ApiDoc(
      *  resource=true,
@@ -57,11 +63,28 @@ class DefaultController extends BaseController
      */
     public function getEntryAction(Entry $entry)
     {
-        return View::create()
-            ->setStatusCode(200)
-            ->setFormat('json')
-            ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
-            ->setData($entry);
+        if ($entry) {
+            // TODO: get user group
+            if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+                $roles = ['admin'];
+            } elseif ($this->get('security.authorization_checker')->isGranted('ROLE_MODERATOR')) {
+                $roles = ['mod'];
+            } else {
+                $roles = ['user'];
+            }
+
+            $view = View::create()
+                ->setStatusCode(Codes::HTTP_OK)
+                ->setTemplate("EntriesBundle:Default:entry.html.twig")
+                ->setTemplateVar('entry')
+                ->setSerializationContext(SerializationContext::create()->setGroups($roles))
+                ->setData($entry);
+
+            return $this->handleView($view);
+
+        } else {
+            throw new \NotFoundHttpException();
+        }
     }
 
 
