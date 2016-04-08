@@ -4,6 +4,7 @@ namespace CoreBundle\Traits;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Expose;
 
 trait Timestampable
 {
@@ -12,6 +13,8 @@ trait Timestampable
      *
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="created_at", type="datetime")
+     * @Expose
+     * @JMS\Groups({"user","mod","admin"})
      */
     protected $createdAt;
 
@@ -20,6 +23,8 @@ trait Timestampable
      *
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="updated_at", type="datetime")
+     * @Expose
+     * @JMS\Groups({"user","mod","admin"})
      */
     protected $updatedAt;
 

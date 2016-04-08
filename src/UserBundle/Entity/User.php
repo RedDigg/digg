@@ -2,11 +2,11 @@
 
 namespace UserBundle\Entity;
 
+use CoreBundle\Traits\Timestampable;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation as JMS;
@@ -24,7 +24,7 @@ class User extends BaseUser
      * updates deletedAt field
      */
     use SoftDeleteableEntity;
-    use TimestampableEntity;
+    use Timestampable;
 
     /**
      * @ORM\Id
@@ -51,10 +51,4 @@ class User extends BaseUser
      * @JMS\Groups({"user","mod","admin"})
      */
     protected $locked;
-
-    /**
-     * @Expose
-     * @JMS\Groups({"user","mod","admin"})
-     */
-    protected $createdAt;
 }
