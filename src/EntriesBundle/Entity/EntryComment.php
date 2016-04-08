@@ -9,9 +9,7 @@ use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation as JMS;
-use JMS\Serializer\Annotation\MaxDepth;
 use CoreBundle\Traits\Timestampable;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity
@@ -25,7 +23,7 @@ class EntryComment
      * Hook SoftDeleteable behavior
      * updates deletedAt field
      */
-//    use SoftDeleteableEntity;
+    use SoftDeleteableEntity;
     use BlameableEntity;
     use Timestampable;
 
@@ -33,7 +31,7 @@ class EntryComment
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @ORM\Id
      * @Expose
-     * @JMS\Groups({"list"})
+     * @JMS\Groups({"user","mod","admin"})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
@@ -42,7 +40,7 @@ class EntryComment
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
      * @ORM\JoinColumn(name="author", referencedColumnName="id")
      * @Expose
-     * @JMS\Groups({"list"})
+     * @JMS\Groups({"user","mod","admin"})
      */
     protected $author;
 
@@ -57,32 +55,34 @@ class EntryComment
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @Expose
-     * @JMS\Groups({"list"})
+     * @JMS\Groups({"user","mod","admin"})
      */
     private $uv;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @Expose
-     * @JMS\Groups({"list"})
+     * @JMS\Groups({"user","mod","admin"})
      */
     private $dv;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @Expose
-     * @JMS\Groups({"list"})
+     * @JMS\Groups({"user","mod","admin"})
      */
     private $voteCount;
 
 
     /**
      * @ORM\Column(type="string")
+     * @JMS\Groups({"admin"})
      */
     private $publicIP;
 
     /**
      * @ORM\Column(type="string")
+     * @JMS\Groups({"admin"})
      */
     private $privateIP;
 
@@ -95,22 +95,35 @@ class EntryComment
     /**
      * @ORM\Column(type="integer")
      * @Expose
-     * @JMS\Groups({"list"})
+     * @JMS\Groups({"user","mod","admin"})
      * @var int
      */
     protected $score = 0;
 
     /**
      * @Expose
-     * @JMS\Groups({"list"})
+     * @JMS\Groups({"user","mod","admin"})
      */
     protected $body;
 
     /**
      * @Expose
-     * @JMS\Groups({"list"})
+     * @JMS\Groups({"user","mod","admin"})
      */
     protected $createdAt;
+
+    /**
+     * @Expose
+     * @JMS\Groups({"mod","admin"})
+     */
+    protected $updatedAt;
+
+    /**
+     * @Expose
+     * @JMS\Groups({"mod","admin"})
+     */
+    protected $deletedAt;
+
     /**
      * Sets the score of the comment.
      *
@@ -273,7 +286,6 @@ class EntryComment
     {
         return $this->privateIP;
     }
-
 
 
     /**
