@@ -1,6 +1,6 @@
 <?php
 
-namespace Red\CoreBundle\Controller;
+namespace CoreBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

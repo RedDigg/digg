@@ -1,6 +1,6 @@
 <?php
 
-namespace Red\CoreBundle\Entity;
+namespace CoreBundle\Entity;
 
 use FOS\OAuthServerBundle\Entity\Client as BaseClient;
 use Doctrine\ORM\Mapping as ORM;

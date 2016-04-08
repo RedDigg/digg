@@ -1,11 +1,11 @@
 <?php
 
-namespace Red\EntriesBundle\Controller;
+namespace EntriesBundle\Controller;
 
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
-use Red\CoreBundle\Controller\BaseController;
-use Red\EntriesBundle\Entity\Entry;
+use CoreBundle\Controller\BaseController;
+use EntriesBundle\Entity\Entry;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -46,10 +46,10 @@ class DefaultController extends BaseController
      *
      * @ApiDoc(
      *  resource=true,
-     *  description="Returns user information",
+     *  description="Returns entry data",
      *
      *  output={
-     *   "class"="Red\EntriesBundle\Entity\Entry",
+     *   "class"="EntriesBundle\Entity\EntryComment",
      *   "parsers"={"Nelmio\ApiDocBundle\Parser\JmsMetadataParser"},
      *   "groups"={"list"}
      *  }
@@ -64,6 +64,7 @@ class DefaultController extends BaseController
             ->setData($entry);
     }
 
+
     /**
      * @Rest\Post("/new")
      * @Rest\View(serializerGroups={"list"})
@@ -72,7 +73,7 @@ class DefaultController extends BaseController
      *  description="Create a new entry",
      *  input="Your\Namespace\Form\Type\YourType",
      *  output={
-     *   "class"="Red\EntriesBundle\Entity\Entry",
+     *   "class"="EntriesBundle\Entity\Entry",
      *   "parsers"={"Nelmio\ApiDocBundle\Parser\JmsMetadataParser"},
      *   "groups"={"list"}
      *  }
@@ -86,6 +87,7 @@ class DefaultController extends BaseController
             ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
             ->setData(['lala']);
     }
+
 
     /**
      * @Rest\Put("/{entry}", requirements={"entry" = "\d+"})
@@ -115,5 +117,10 @@ class DefaultController extends BaseController
             ->setFormat('json')
             ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
             ->setData([1]);
+    }
+
+    public function testAction()
+    {
+        return $this->render('EntriesBundle:Default:index.html.twig', []);
     }
 }

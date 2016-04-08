@@ -1,4 +1,4 @@
 services:
 #    core.example:
-#        class: Red\CoreBundle\Example
+#        class: CoreBundle\Example
 #        arguments: ["@service_id", "plain_value", %parameter%]

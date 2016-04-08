@@ -1,4 +1,4 @@
 services:
 #    entries.example:
-#        class: Red\EntriesBundle\Example
+#        class: EntriesBundle\Example
 #        arguments: ["@service_id", "plain_value", %parameter%]

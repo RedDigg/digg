@@ -1,6 +1,6 @@
 <?php
 
-namespace Red\EntriesBundle;
+namespace EntriesBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

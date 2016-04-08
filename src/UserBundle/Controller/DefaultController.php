@@ -1,10 +1,10 @@
 <?php
 
-namespace Red\UserBundle\Controller;
+namespace UserBundle\Controller;
 
 use FOS\RestBundle\View\View;
-use Red\CoreBundle\Controller\BaseController;
-use Red\UserBundle\Entity\User;
+use CoreBundle\Controller\BaseController;
+use UserBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\Serializer\SerializationContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -28,7 +28,7 @@ class DefaultController extends BaseController
      *  description="Returns user information",
      *
      *  output={
-     *   "class"="Red\UserBundle\Entity\User",
+     *   "class"="UserBundle\Entity\User",
      *   "parsers"={"Nelmio\ApiDocBundle\Parser\JmsMetadataParser"},
      *   "groups"={"list"}
      *  }
@@ -51,7 +51,7 @@ class DefaultController extends BaseController
      *  description="Create a new user",
      *  input="Your\Namespace\Form\Type\YourType",
      *  output={
-     *   "class"="Red\UserBundle\Entity\User",
+     *   "class"="UserBundle\Entity\User",
      *   "parsers"={"Nelmio\ApiDocBundle\Parser\JmsMetadataParser"},
      *   "groups"={"list"}
      *  }
