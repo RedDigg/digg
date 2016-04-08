@@ -23,11 +23,10 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new FOS\RestBundle\FOSRestBundle(),
-            new FOS\CommentBundle\FOSCommentBundle(),
 
-            new Red\EntriesBundle\EntriesBundle(),
-            new Red\CoreBundle\CoreBundle(),
-            new Red\UserBundle\UserBundle(),
+            new EntriesBundle\EntriesBundle(),
+            new CoreBundle\CoreBundle(),
+            new UserBundle\UserBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

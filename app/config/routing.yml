@@ -14,7 +14,7 @@ fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
 
 user:
-    resource: Red\UserBundle\Controller\DefaultController
+    resource: UserBundle\Controller\DefaultController
     type:     rest
     prefix:   /api/user
 
@@ -24,18 +24,12 @@ core:
     prefix:   /
 
 entries:
-    resource: Red\EntriesBundle\Controller\DefaultController
+    resource: EntriesBundle\Controller\DefaultController
     type:     rest
     prefix:   /api/entries
 
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
-
-fos_comment_api:
-    type: rest
-    resource: "@FOSCommentBundle/Resources/config/routing.yml"
-    prefix: /api
-    defaults: { _format: html }
 
 account_show:
     path:     /entries/{entry}/{slug}

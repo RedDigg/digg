@@ -1,7 +1,6 @@
 {
-  "name": "lmalicki/stream",
-  "license": "proprietary",
-  "type": "project",
+  "name": "reddigg/digg",
+  "license": "BSD-3-Clause",
   "autoload": {
     "psr-4": {
       "": "src/"
@@ -17,7 +16,7 @@
     }
   },
   "require": {
-    "php": ">=5.5.9",
+    "php": ">=7.0",
     "symfony/symfony": "3.0.*",
     "doctrine/orm": ">=2.5@dev",
     "doctrine/common": ">=2.5@dev",
@@ -38,7 +37,6 @@
     "jms/serializer-bundle": "^1.1",
     "nelmio/api-doc-bundle": "^2.12",
     "friendsofsymfony/oauth-server-bundle": "^1.5",
-    "friendsofsymfony/comment-bundle": "^2.0",
     "symfony/assetic-bundle": "^2.8"
   },
   "require-dev": {
@@ -62,11 +60,6 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ]
-  },
-  "config": {
-    "platform": {
-      "php": "5.5.9"
-    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
