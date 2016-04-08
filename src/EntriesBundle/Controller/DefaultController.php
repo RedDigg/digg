@@ -20,7 +20,7 @@ class DefaultController extends BaseController
 
     /**
      * @Rest\Get("/")
-     * @Rest\View(serializerGroups={"list"})
+     * @Rest\View(serializerGroups={"user","mod","admin"})
      *
      * @ApiDoc(
      *  resource=true,
@@ -39,7 +39,7 @@ class DefaultController extends BaseController
 
     /**
      * @Rest\Get("/{entry}", requirements={"entry" = "\d+"})
-     * @Rest\View(serializerGroups={"list"})
+     * @Rest\View(serializerGroups={"user","mod","admin"})
      * @param Entry $entry
      * @return View
      *
@@ -51,7 +51,7 @@ class DefaultController extends BaseController
      *  output={
      *   "class"="EntriesBundle\Entity\EntryComment",
      *   "parsers"={"Nelmio\ApiDocBundle\Parser\JmsMetadataParser"},
-     *   "groups"={"list"}
+     *   "groups"={"user","mod","admin"}
      *  }
      * )
      */

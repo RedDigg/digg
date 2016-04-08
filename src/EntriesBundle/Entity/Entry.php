@@ -6,14 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Blameable\Traits\BlameableEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Gedmo\Timestampable\Traits\Timestampable;
 use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\MaxDepth;
-use CoreBundle\Traits\Timestampable;
 
 /**
  * @ORM\Entity
  * @ORM\Table()
- * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
+ * @ExclusionPolicy("all")
  */
 class Entry
 {
@@ -22,9 +21,10 @@ class Entry
      * Hook SoftDeleteable behavior
      * updates deletedAt field
      */
-//    use SoftDeleteableEntity;
+    use SoftDeleteableEntity;
     use BlameableEntity;
-//    use Timestampable;
+    use Timestampable;
+
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})

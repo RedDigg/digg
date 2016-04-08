@@ -13,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
- * @ORM\Table()
+ * @ORM\Table(name="oauth2_user")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ExclusionPolicy("all")
  */
@@ -25,30 +25,36 @@ class User extends BaseUser
      */
     use SoftDeleteableEntity;
     use TimestampableEntity;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Expose
-     * @JMS\Groups({"list"})
+     * @JMS\Groups({"mod","admin"})
      */
     protected $id;
 
     public function __construct()
     {
         parent::__construct();
-        // your own logic
     }
 
     /**
      * @Expose
-     * @JMS\Groups({"list"})
+     * @JMS\Groups({"user","mod","admin"})
      */
     protected $username;
 
     /**
      * @Expose
-     * @JMS\Groups({"list"})
+     * @JMS\Groups({"user","mod","admin"})
      */
     protected $locked;
+
+    /**
+     * @Expose
+     * @JMS\Groups({"user","mod","admin"})
+     */
+    protected $createdAt;
 }

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lmalicki
- * Date: 06.04.16
- * Time: 22:39
- */
 
 namespace CoreBundle\Traits;
 
@@ -16,9 +10,10 @@ trait Timestampable
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="created_at", type="datetime")
      */
-    protected $deletedAt;
+    protected $createdAt;
 
     /**
      * @var \DateTime
@@ -28,7 +23,25 @@ trait Timestampable
      */
     protected $updatedAt;
 
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
 
+    /**
+     * @param \DateTime $createdAt
+     *
+     * @return $this
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
 
     /**
      * @return \DateTime
@@ -48,15 +61,5 @@ trait Timestampable
         $this->updatedAt = $updatedAt;
 
         return $this;
-    }
-
-    public function getDeletedAt()
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt($deletedAt)
-    {
-        $this->deletedAt = $deletedAt;
     }
 }
