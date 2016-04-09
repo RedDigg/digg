@@ -27,11 +27,8 @@ class AppKernel extends Kernel
             new EntriesBundle\EntriesBundle(),
             new CoreBundle\CoreBundle(),
             new UserBundle\UserBundle(),
-<<<<<<< HEAD
             new ContentBundle\ContentBundle(),
-=======
             new \ChannelBundle\ChannelBundle()
->>>>>>> c331f663db1ad9960bc67df1e6218d3f8f2e94c4
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
@@ -51,16 +48,16 @@ class AppKernel extends Kernel
 
     public function getCacheDir()
     {
-        return dirname(__DIR__).'/var/cache/'.$this->getEnvironment();
+        return dirname(__DIR__) . '/var/cache/' . $this->getEnvironment();
     }
 
     public function getLogDir()
     {
-        return dirname(__DIR__).'/var/logs';
+        return dirname(__DIR__) . '/var/logs';
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
+        $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
     }
 }
