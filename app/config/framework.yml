@@ -1,4 +1,5 @@
 framework:
+#    trusted_proxies:  [94.254.177.89]
     #esi:             ~
     translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"

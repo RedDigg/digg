@@ -24,7 +24,7 @@ class DefaultController extends BaseController
      * @return View
      *
      * @ApiDoc(
-     *  resource=true,
+     *  resource="/api/user/",
      *  description="Returns user information",
      *
      *  output={
@@ -48,6 +48,7 @@ class DefaultController extends BaseController
      * @Rest\View(serializerGroups={"list"})
      *
      * @ApiDoc(
+     *  resource="/api/user/",
      *  description="Create a new user",
      *  input="Your\Namespace\Form\Type\YourType",
      *  output={

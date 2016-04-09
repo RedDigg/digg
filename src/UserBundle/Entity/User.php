@@ -47,6 +47,7 @@ class User extends BaseUser
     protected $username;
 
     /**
+     * TRUE if account is locked
      * @Expose
      * @JMS\Groups({"user","mod","admin"})
      */

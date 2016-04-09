@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>ContentRelated list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Url</th>
+                <th>Eng</th>
+                <th>Nsfw</th>
+                <th>Uv</th>
+                <th>Dv</th>
+                <th>Score</th>
+                <th>Deletedat</th>
+                <th>Createdat</th>
+                <th>Updatedat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for contentRelated in contentRelateds %}
+            <tr>
+                <td><a href="{{ path('content_related_show', { 'id': contentRelated.id }) }}">{{ contentRelated.id }}</a></td>
+                <td>{{ contentRelated.title }}</td>
+                <td>{{ contentRelated.url }}</td>
+                <td>{% if contentRelated.eng %}Yes{% else %}No{% endif %}</td>
+                <td>{% if contentRelated.nsfw %}Yes{% else %}No{% endif %}</td>
+                <td>{{ contentRelated.uv }}</td>
+                <td>{{ contentRelated.dv }}</td>
+                <td>{{ contentRelated.score }}</td>
+                <td>{% if contentRelated.deletedAt %}{{ contentRelated.deletedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if contentRelated.createdAt %}{{ contentRelated.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if contentRelated.updatedAt %}{{ contentRelated.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('content_related_show', { 'id': contentRelated.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('content_related_edit', { 'id': contentRelated.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('content_related_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

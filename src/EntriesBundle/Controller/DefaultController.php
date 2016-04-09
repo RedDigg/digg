@@ -24,7 +24,7 @@ class DefaultController extends BaseController
      * @Rest\View(serializerGroups={"user","mod","admin"})
      *
      * @ApiDoc(
-     *  resource=true,
+     *  resource="/api/entry/",
      *  description="Returns entries",
      *
      * )
@@ -51,7 +51,7 @@ class DefaultController extends BaseController
      * @throws \NotFoundHttpException*
      *
      * @ApiDoc(
-     *  resource=true,
+     *  resource="/api/entry/",
      *  description="Returns entry data",
      *
      *  output={
@@ -63,6 +63,8 @@ class DefaultController extends BaseController
      */
     public function getEntryAction(Entry $entry)
     {
+        echo $this->getUserIP();
+
         if ($entry) {
             // TODO: get user group
             if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
@@ -87,12 +89,27 @@ class DefaultController extends BaseController
         }
     }
 
+    public function getUserIP() {
+        if( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
+            if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')>0) {
+                $addr = explode(",",$_SERVER['HTTP_X_FORWARDED_FOR']);
+                return trim($addr[0]);
+            } else {
+                return $_SERVER['HTTP_X_FORWARDED_FOR'];
+            }
+        }
+        else {
+            return $_SERVER['REMOTE_ADDR'];
+        }
+    }
+
 
     /**
      * @Rest\Post("/new")
      * @Rest\View(serializerGroups={"list"})
      *
      * @ApiDoc(
+     *  resource="/api/entry/",
      *  description="Create a new entry",
      *  input="Your\Namespace\Form\Type\YourType",
      *  output={

@@ -1,4 +1,5 @@
 fos_rest:
+    disable_csrf_role: ROLE_API
     routing_loader:
         default_format: json
         include_format: false
@@ -7,3 +8,5 @@ fos_rest:
     format_listener: true
     view:
         view_response_listener: 'force'
+    service:
+        exception_handler:    fos_rest.view.exception_wrapper_handler

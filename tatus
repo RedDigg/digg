@@ -1,0 +1,206 @@
+[33mcommit ff86b36557c4624cea1e77923d2823bdd94f9291[m
+Author: Lukasz Malicki <lukasz.malicki@polcode.com>
+Date:   Fri Apr 8 23:00:41 2016 +0200
+
+    api _format(json|xml|html), added alternative route to entries with default _format=html
+
+[33mcommit b2be14f199e731e45fc97e5f7a8bf427088257ee[m
+Merge: 408ff19 7775a41
+Author: Lukasz Malicki <lukasz.malicki@polcode.com>
+Date:   Fri Apr 8 21:20:00 2016 +0200
+
+    Merge branch 'master' of github.com:RedDigg/digg
+
+[33mcommit 408ff196529c42f11f4829ce269d06e5f707395e[m
+Author: Lukasz Malicki <lukasz.malicki@polcode.com>
+Date:   Fri Apr 8 21:19:48 2016 +0200
+
+    remove foscomment from web/bundles
+
+[33mcommit 7775a4146841da03d78931ee2dfb83dcb269a7aa[m
+Merge: ce477af cc8ed0e
+Author: RedDigg <RedDigg@users.noreply.github.com>
+Date:   Fri Apr 8 21:19:08 2016 +0200
+
+    Merge pull request #12 from bilgorajskim/master
+    
+    New .gitignore, fix Timestampable trait on User entity
+
+[33mcommit cc8ed0e2902bac515db5142074910c305065635b[m
+Author: bilgorajskim <bilgorajskim@gmail.com>
+Date:   Fri Apr 8 17:25:51 2016 +0200
+
+    Delete junk
+
+[33mcommit d8d571c190febd56e39299650f06d111ce65419c[m
+Author: bilgorajskim <bilgorajskim@gmail.com>
+Date:   Fri Apr 8 17:22:02 2016 +0200
+
+    Fix User entity (use CoreBundle:Timestampable trait with properties exposed to JMS)
+
+[33mcommit 4e19231b71ac0946f7c200d9d476a78c60367e64[m
+Author: bilgorajskim <bilgorajskim@gmail.com>
+Date:   Fri Apr 8 17:20:25 2016 +0200
+
+    Fix .gitignore once again
+
+[33mcommit ce477af8162b5cffd59d769d2817e7a471a1ea6c[m
+Merge: 24ce288 731bb37
+Author: Łukasz <qweluke@users.noreply.github.com>
+Date:   Fri Apr 8 08:45:40 2016 +0200
+
+    Merge pull request #11 from qweluke/master
+    
+    added groups to api docs, traits
+
+[33mcommit 731bb370af09fd11ee92507b694fd4727a886855[m
+Author: Lukasz Malicki <lukasz.malicki@polcode.com>
+Date:   Fri Apr 8 08:44:13 2016 +0200
+
+    removed session
+
+[33mcommit 36157ef02f5c1a52fa269ca8dc360e3233a4fed6[m
+Author: Lukasz Malicki <lukasz.malicki@polcode.com>
+Date:   Fri Apr 8 08:43:52 2016 +0200
+
+    added groups to api docs
+
+[33mcommit 24ce288a51b8c266d060a9bf28c9fb258935ba23[m
+Merge: 0c979de 5554160
+Author: Łukasz <qweluke@users.noreply.github.com>
+Date:   Fri Apr 8 08:05:00 2016 +0200
+
+    Merge pull request #10 from qweluke/master
+    
+    Fix namespaces, remove FOSCommentBundle
+
+[33mcommit 5554160ea3531e7848e82f8a40a4cb51babe7b6a[m
+Author: Lukasz Malicki <lukasz.malicki@polcode.com>
+Date:   Fri Apr 8 08:01:37 2016 +0200
+
+    add *~ to .gitignore
+
+[33mcommit 1f498f0f11c69693d37eadc92740e24f80538e8d[m
+Merge: cfd8e11 0c979de
+Author: Lukasz Malicki <lukasz.malicki@polcode.com>
+Date:   Fri Apr 8 08:00:06 2016 +0200
+
+    fix namespaces, remove FOSUserBundle
+
+[33mcommit cfd8e1138a7166ba0b5b18c72ed8d1da86c2c81e[m
+Merge: f70eaf5 bcac3d3
+Author: Lukasz Malicki <lukasz.malicki@polcode.com>
+Date:   Thu Apr 7 23:30:06 2016 +0200
+
+    .
+
+[33mcommit f70eaf5c4eb8d7dbd31aa7f0083f62dbecb82db0[m
+Author: Lukasz Malicki <lukasz.malicki@polcode.com>
+Date:   Thu Apr 7 23:28:40 2016 +0200
+
+    fix
+
+[33mcommit 0c979de0163fd00562246d2f387c3d48fc337acc[m
+Merge: 133ce32 a309cbc
+Author: RedDigg <RedDigg@users.noreply.github.com>
+Date:   Thu Apr 7 23:28:14 2016 +0200
+
+    Merge pull request #9 from bilgorajskim/master
+    
+    Fix PSR-4, change license, package name
+
+[33mcommit a309cbcf98aa443b5ba454ac8f5106f067a740bc[m
+Author: bilgorajskim <bilgorajskim@gmail.com>
+Date:   Thu Apr 7 23:23:08 2016 +0200
+
+    Fix typo
+
+[33mcommit 14f9238911afa2f2fb5cb74f87bf10a13acbdfc7[m
+Author: bilgorajskim <bilgorajskim@gmail.com>
+Date:   Thu Apr 7 23:21:23 2016 +0200
+
+    Update .gitignore
+
+[33mcommit e6b16df4034b9157e0352512140dd32a9c5e3bbe[m
+Author: bilgorajskim <bilgorajskim@gmail.com>
+Date:   Thu Apr 7 23:21:07 2016 +0200
+
+    Fix PSR-4, change license, bump PHP to 7.0
+
+[33mcommit 133ce3289a130aa1a748dd76cc164c73668cd966[m
+Merge: 0f0f31f 03fc92e
+Author: RedDigg <RedDigg@users.noreply.github.com>
+Date:   Thu Apr 7 22:34:10 2016 +0200
+
+    Merge pull request #8 from bilgorajskim/master
+    
+    Move Doctrine DBAL driver setting to parameters.yml
+
+[33mcommit 03fc92ea1cf35a22b3bc633562fc1b6e6fd2da2d[m
+Author: bilgorajskim <bilgorajskim@gmail.com>
+Date:   Thu Apr 7 22:26:15 2016 +0200
+
+    Move Doctrine DBAL driver setting to parameters.yml
+
+[33mcommit bcac3d34cf52c389fd552708cef188731720382c[m
+Author: Lukasz Malicki <lukasz.malicki@polcode.com>
+Date:   Thu Apr 7 15:34:54 2016 +0200
+
+    entries test
+
+[33mcommit 0f0f31f2045afa5a169b9ff04a3b3c061983e11b[m
+Author: RedDigg <RedDigg@users.noreply.github.com>
+Date:   Wed Apr 6 21:56:42 2016 +0200
+
+    Update README.md
+
+[33mcommit c5e79f423e61e082efd3a6340448b1df1ed9b774[m
+Author: RedDigg <RedDigg@users.noreply.github.com>
+Date:   Wed Apr 6 21:55:53 2016 +0200
+
+    Update README.md
+
+[33mcommit cf06371ddb561dd91da321652dcd26bd4c8e1861[m
+Author: RedDigg <RedDigg@users.noreply.github.com>
+Date:   Wed Apr 6 21:55:35 2016 +0200
+
+    Update README.md
+
+[33mcommit 781e154872d5c5840ddf58d8d6290db9adbe7551[m
+Author: RedDigg <RedDigg@users.noreply.github.com>
+Date:   Wed Apr 6 21:54:47 2016 +0200
+
+    Update README.md
+
+[33mcommit 2461112667153f2993007a39ff7f8fef82ef4ff5[m
+Author: RedDigg <RedDigg@users.noreply.github.com>
+Date:   Wed Apr 6 21:51:50 2016 +0200
+
+    Update README.md
+
+[33mcommit 804518f1b4359ae21a9e51149b7d5c2bd122e654[m
+Author: RedDigg <RedDigg@users.noreply.github.com>
+Date:   Wed Apr 6 21:51:26 2016 +0200
+
+    Update README.md
+
+[33mcommit 572920806483af344546e820b8ccbd3c47f654ab[m
+Merge: 990c509 70e9f31
+Author: RedDigg <RedDigg@users.noreply.github.com>
+Date:   Wed Apr 6 21:46:00 2016 +0200
+
+    Merge pull request #1 from qweluke/master
+    
+    fix missing bin folder
+
+[33mcommit 70e9f31145f077933d6ff18517a72e0bc130c1c5[m
+Author: Lukasz Malicki <lukasz.malicki@polcode.com>
+Date:   Wed Apr 6 21:34:18 2016 +0200
+
+    fix missing bin folder
+
+[33mcommit 990c5092a6ed5b46d9d3c66221b1da6b850b39e9[m
+Author: Lukasz Malicki <lukasz.malicki@polcode.com>
+Date:   Wed Apr 6 12:03:18 2016 +0200
+
+    initial

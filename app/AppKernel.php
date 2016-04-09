@@ -27,7 +27,11 @@ class AppKernel extends Kernel
             new EntriesBundle\EntriesBundle(),
             new CoreBundle\CoreBundle(),
             new UserBundle\UserBundle(),
+<<<<<<< HEAD
+            new ContentBundle\ContentBundle(),
+=======
             new \ChannelBundle\ChannelBundle()
+>>>>>>> c331f663db1ad9960bc67df1e6218d3f8f2e94c4
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
