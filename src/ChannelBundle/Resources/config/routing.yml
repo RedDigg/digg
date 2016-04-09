@@ -1,8 +1,10 @@
-channel:
-    resource: "ChannelBundle\\Controller\\ChannelController"
+channels:
+    resource: ChannelBundle\Controller\ChannelController
     type: rest
+    prefix:   /api/channels
+
 channels_list:
-    path:     /channels
+    path:     /channels/
     defaults: { _controller: "ChannelBundle:Channel:getChannels", _format:"html"}
     methods:  [GET]
 channels_channel:

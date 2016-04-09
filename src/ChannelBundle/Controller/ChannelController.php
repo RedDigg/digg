@@ -22,7 +22,7 @@ class ChannelController extends BaseController
 
     /**
      * @Rest\Get(
-     *     ".{_format}",
+     *     "/{_format}",
      *     defaults = { "_format" = "json" }
      * )
      *
@@ -33,7 +33,6 @@ class ChannelController extends BaseController
      *  description="Returns channels",
      *
      * )
-     * @param EntityManager $em
      * @return View
      */
     public function getChannelsAction()
