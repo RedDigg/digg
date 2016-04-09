@@ -1,0 +1,23 @@
+channels:
+    resource: ChannelBundle\Controller\ChannelController
+    type: rest
+    prefix:   /api/channels
+
+channels_list:
+    path:     /channels/
+    defaults: { _controller: "ChannelBundle:Channel:getChannels", _format:"html"}
+    methods:  [GET]
+channels_channel:
+    path:     /channels/{channel}
+    defaults: { _controller: "ChannelBundle:Channel:getChannel", channel: null, _format:"html"}
+    requirements:
+      channel: \d+
+    methods:  [GET]
+channels_new:
+    path:     /channels/new
+    defaults: { _controller: "ChannelBundle:Channel:newChannel", _format:"html"}
+    methods:  [GET]
+channels_post:
+    path:     /channels/new
+    defaults: { _controller: "ChannelBundle:Channel:postChannel", _format:"html"}
+    methods:  [POST]
