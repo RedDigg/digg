@@ -1,6 +1,6 @@
 <?php
 
-namespace EntriesBundle;
+namespace ChannelBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

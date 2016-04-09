@@ -38,3 +38,6 @@ entries_entry:
     requirements:
       entry: \d+
     methods:  [GET]
+
+channel:
+    resource: '@ChannelBundle/Resources/config/routing.yml'
