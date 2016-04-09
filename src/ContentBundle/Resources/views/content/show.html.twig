@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Content</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ content.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ content.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ content.description }}</td>
+            </tr>
+            <tr>
+                <th>Domain</th>
+                <td>{{ content.domain }}</td>
+            </tr>
+            <tr>
+                <th>Commentscount</th>
+                <td>{{ content.commentsCount }}</td>
+            </tr>
+            <tr>
+                <th>Eng</th>
+                <td>{% if content.eng %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Nsfw</th>
+                <td>{% if content.nsfw %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Uv</th>
+                <td>{{ content.uv }}</td>
+            </tr>
+            <tr>
+                <th>Dv</th>
+                <td>{{ content.dv }}</td>
+            </tr>
+            <tr>
+                <th>Score</th>
+                <td>{{ content.score }}</td>
+            </tr>
+            <tr>
+                <th>Deletedat</th>
+                <td>{% if content.deletedAt %}{{ content.deletedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Createdat</th>
+                <td>{% if content.createdAt %}{{ content.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Updatedat</th>
+                <td>{% if content.updatedAt %}{{ content.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('content_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('content_edit', { 'id': content.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

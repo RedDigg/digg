@@ -9,6 +9,7 @@ use JMS\Serializer\Annotation\Expose;
 trait Timestampable
 {
     /**
+     * DateTime of creation
      * @var \DateTime
      *
      * @Gedmo\Timestampable(on="create")
@@ -19,6 +20,7 @@ trait Timestampable
     protected $createdAt;
 
     /**
+     * DateTime of last update
      * @var \DateTime
      *
      * @Gedmo\Timestampable(on="update")
