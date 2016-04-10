@@ -71,7 +71,8 @@ class ContentRelatedController extends Controller
      *  description="Creates new related content",
      *
      *  input={
-     *     "class"="ContentBundle\Form\ContentRelatedType"
+     *     "class"="ContentBundle\Form\ContentRelatedType",
+     *     "name" = ""
      *  },
      *
      *  output={
@@ -92,7 +93,7 @@ class ContentRelatedController extends Controller
         $contentRelated->setContent($content);
 
         $form = $this->createForm('ContentBundle\Form\ContentRelatedType', $contentRelated);
-        $form->submit($request->request->get($form->getName()));
+        $form->submit($request->request->all());
 
         $view = View::create()
             ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
@@ -180,7 +181,10 @@ class ContentRelatedController extends Controller
      *  resource="/api/content/",
      *  description="Updates content data",
      *
-     *  input="ContentBundle\Form\ContentRelatedType",
+     *  input={
+     *     "class"="ContentBundle\Form\ContentRelatedType",
+     *     "name" = ""
+     *  },
      *
      *  output={
      *   "class"="EntriesBundle\Entity\ContentRelated",
@@ -197,7 +201,7 @@ class ContentRelatedController extends Controller
         }
 
         $editForm = $this->createForm('ContentBundle\Form\ContentRelatedType', $contentRelated, ['method' => 'PATCH']);
-        $editForm->submit($request->request->get($editForm->getName()));
+        $editForm->submit($request->request->all());
 
         $view = View::create()
             ->setSerializationContext(SerializationContext::create()->setGroups(['user']));

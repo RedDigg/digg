@@ -40,4 +40,12 @@ class ContentRelatedType extends AbstractType
             'data_class' => 'ContentBundle\Entity\ContentRelated'
         ));
     }
+
+    /**
+     * @return string
+     */
+    public function getBlockPrefix()
+    {
+        return 'content_related';
+    }
 }

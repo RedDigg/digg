@@ -67,6 +67,7 @@ class ContentController extends Controller
      *
      *  input={
      *     "class"="ContentBundle\Form\ContentType",
+     *     "name" = ""
      *  },
      *
      *  output={
@@ -81,7 +82,7 @@ class ContentController extends Controller
     {
         $content = new Content();
         $form = $this->createForm('ContentBundle\Form\ContentType', $content);
-        $form->submit($request->request->get($form->getName()));
+        $form->submit($request->request->all());
 
         $view = View::create()
             ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
@@ -168,7 +169,10 @@ class ContentController extends Controller
      *  resource="/api/content/",
      *  description="Updates content data",
      *
-     *  input="ContentBundle\Form\ContentType",
+     *  input={
+     *     "class"="ContentBundle\Form\ContentType",
+     *     "name" = ""
+     *  },
      *
      *  output={
      *   "class"="EntriesBundle\Entity\Content",
@@ -184,7 +188,7 @@ class ContentController extends Controller
         }
 
         $editForm = $this->createForm('ContentBundle\Form\ContentType', $content);
-        $editForm->submit($request->request->get($editForm->getName()));
+        $editForm->submit($request->request->all(), false);
 
         $view = View::create()
             ->setSerializationContext(SerializationContext::create()->setGroups(['user']));

@@ -20,7 +20,7 @@ class ContentType extends AbstractType
         $builder
             ->add('title', TextType::class)
             ->add('description', TextareaType::class)
-            ->add('eng', CheckboxType::class, [
+            ->add('eng', TextType::class, [
                 'required' => false
             ])
             ->add('nsfw', CheckboxType::class, [
@@ -36,5 +36,13 @@ class ContentType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'ContentBundle\Entity\Content'
         ));
+    }
+
+    /**
+     * @return string
+     */
+    public function getBlockPrefix()
+    {
+        return 'content';
     }
 }
