@@ -22,7 +22,7 @@ class ContentController extends Controller
     /**
      * Array of content entities.
      *
-     * @Rest\Get("/")
+     * @Rest\Get("/{_format}", defaults = { "_format" = "json" })
      * @Rest\View(serializerGroups={"user","mod","admin"})
      *
      * @ApiDoc(
@@ -58,14 +58,16 @@ class ContentController extends Controller
     /**
      * Creates a new Content entity.
      *
-     * @Rest\Post("/new")
+     * @Rest\Post("/new/{_format}", defaults = { "_format" = "json" })
      * @Rest\View(serializerGroups={"user","mod","admin"})
      *
      * @ApiDoc(
      *  resource="/api/content/",
-     *  description="Returns contents",
+     *  description="Creates new content",
      *
-     *  input="ContentBundle\Form\ContentType",
+     *  input={
+     *     "class"="ContentBundle\Form\ContentType",
+     *  },
      *
      *  output={
      *   "class"="ContentBundle\Entity\Content",
@@ -151,7 +153,7 @@ class ContentController extends Controller
     /**
      * Edit an existing Content entity.
      *
-     * @Rest\Put(
+     * @Rest\Patch(
      *     "/{content}.{_format}",
      *     requirements={"content" = "\d+"},
      *     defaults = { "_format" = "json" }
@@ -226,15 +228,7 @@ class ContentController extends Controller
      *
      * @ApiDoc(
      *  resource="/api/content/",
-     *  description="Updates content data",
-     *
-     *  input="ContentBundle\Form\ContentType",
-     *
-     *  output={
-     *   "class"="EntriesBundle\Entity\Content",
-     *   "parsers"={"Nelmio\ApiDocBundle\Parser\JmsMetadataParser"},
-     *   "groups"={"user","mod","admin"}
-     *  }
+     *  description="Deletes content"
      * )
      */
     public function deleteAction(Request $request, Content $content)

@@ -33,6 +33,11 @@ content:
     type:     rest
     prefix:   /api/content
 
+content_related:
+    resource: ContentBundle\Controller\ContentRelatedController
+    type:     rest
+    prefix:   /api/content/related
+
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 

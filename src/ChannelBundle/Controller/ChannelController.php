@@ -29,7 +29,7 @@ class ChannelController extends BaseController
      * @Rest\View(serializerGroups={"user","mod","admin"})
      *
      * @ApiDoc(
-     *  resource=true,
+     *  resource="/api/channels/",
      *  description="Returns channels",
      *
      * )
@@ -51,7 +51,7 @@ class ChannelController extends BaseController
      * @return View
      * @internal param Channel $channel
      * @ApiDoc(
-     *  resource=true,
+     *  resource="/api/channels/",
      *  description="Returns channel data",
      *
      *  output={
