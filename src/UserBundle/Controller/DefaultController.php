@@ -70,6 +70,7 @@ class DefaultController extends Controller
      *
      *  input={
      *     "class"="UserBundle\Form\UserType",
+     *     "name"= ""
      *  },
      *
      *  output={
@@ -84,7 +85,7 @@ class DefaultController extends Controller
     {
         $user = new User();
         $form = $this->createForm('UserBundle\Form\UserType', $user);
-        $form->handleRequest($request);
+        $form->submit($request->request->all());
 
         $view = View::create()
             ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
@@ -169,7 +170,10 @@ class DefaultController extends Controller
      *  resource="/api/content/",
      *  description="Updates content data",
      *
-     *  input="UserBundle\Form\UserType",
+     *  input={
+     *     "class"="UserBundle\Form\UserType",
+     *     "name"= ""
+     *  },
      *
      *  output={
      *   "class"="UserBundle\Entity\User",
@@ -182,7 +186,7 @@ class DefaultController extends Controller
     {
         $deleteForm = $this->createDeleteForm($user);
         $editForm = $this->createForm('UserBundle\Form\UserType', $user);
-        $editForm->handleRequest($request);
+        $editForm->submit($request->request->all());
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();

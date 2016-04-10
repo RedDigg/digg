@@ -31,4 +31,12 @@ class UserType extends AbstractType
             'data_class' => 'UserBundle\Entity\User'
         ));
     }
+
+    /**
+     * @return string
+     */
+    public function getBlockPrefix()
+    {
+        return 'user';
+    }
 }
