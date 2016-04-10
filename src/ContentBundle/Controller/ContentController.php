@@ -2,16 +2,16 @@
 
 namespace ContentBundle\Controller;
 
-use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\View;
-use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use ContentBundle\Entity\Content;
-use FOS\RestBundle\Controller\Annotations as Rest;
 use ContentBundle\Form\ContentType;
+use FOS\RestBundle\Util\Codes;
+use JMS\Serializer\SerializationContext;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
