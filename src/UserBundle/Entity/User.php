@@ -4,6 +4,7 @@ namespace UserBundle\Entity;
 
 use CoreBundle\Traits\Timestampable;
 use FOS\UserBundle\Model\User as BaseUser;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -40,11 +41,6 @@ class User extends BaseUser
         parent::__construct();
     }
 
-    /**
-     * @Expose
-     * @JMS\Groups({"user","mod","admin"})
-     */
-    protected $username;
 
     /**
      * TRUE if account is locked
@@ -52,4 +48,34 @@ class User extends BaseUser
      * @JMS\Groups({"user","mod","admin"})
      */
     protected $locked;
+
+    /**
+     * [min: 5, max:40]
+     * @Assert\Length(
+     *      min = 5,
+     *      max = 40,
+     *      minMessage = "Field 'username' should be at least {{ limit }} characters long",
+     *      maxMessage = "Field 'username' cannot be longer than {{ limit }} characters"
+     * )
+     *
+     * @Expose
+     * @JMS\Groups({"user","mod","admin"})
+     */
+    protected $username;
+
+    /**
+     * Contains user roles
+     *
+     * @Expose
+     * @JMS\Groups({"user","mod","admin"})
+     */
+    protected $roles;
+
+    /**
+     * Contains user email. Visible only to administrator.
+     *
+     * @Expose
+     * @JMS\Groups({"admin"})
+     */
+    protected $email;
 }

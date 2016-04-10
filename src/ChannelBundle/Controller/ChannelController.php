@@ -98,7 +98,9 @@ class ChannelController extends BaseController
      *
      * @return View view instance
      *
-     * @ApiDoc()
+     * @ApiDoc(
+     *  resource="/api/channels/",
+     * )
      */
     public function postChannelAction(Request $request)
     {
@@ -122,7 +124,8 @@ class ChannelController extends BaseController
      * @Rest\View(serializerGroups={"list"})
      *
      * @ApiDoc(
-     *  description="Display a new channel form"
+     *  description="Display a new channel form",
+     *  resource="/api/channels/",
      * )
      */
     public function newChannelAction(Request $request)

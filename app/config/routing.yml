@@ -38,6 +38,8 @@ content_related:
     type:     rest
     prefix:   /api/content/related
 
+
+
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 
