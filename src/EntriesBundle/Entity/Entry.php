@@ -2,6 +2,7 @@
 
 namespace EntriesBundle\Entity;
 
+use CoreBundle\Traits\Bleamable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Blameable\Traits\BlameableEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -24,7 +25,7 @@ class Entry
      * updates deletedAt field
      */
     use SoftDeleteableEntity;
-    use BlameableEntity;
+    use Bleamable;
     use Timestampable;
 
 

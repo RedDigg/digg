@@ -63,8 +63,6 @@ class DefaultController extends BaseController
      */
     public function getEntryAction(Entry $entry)
     {
-        echo $this->getUserIP();
-
         if ($entry) {
             // TODO: get user group
             if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {

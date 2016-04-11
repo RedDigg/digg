@@ -3,7 +3,6 @@
 namespace ContentBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,12 +19,8 @@ class ContentType extends AbstractType
         $builder
             ->add('title', TextType::class)
             ->add('description', TextareaType::class)
-            ->add('eng', TextType::class, [
-                'required' => false
-            ])
-            ->add('nsfw', CheckboxType::class, [
-                'required' => false
-            ]);
+            ->add('eng', TextType::class)
+            ->add('nsfw', TextType::class);
     }
 
     /**
