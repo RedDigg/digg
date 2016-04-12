@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
-</html>
+<meta charset="UTF-8">
+<title>niby-strims.pl - Główna</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
+<header>
+    <div class="place">
+        <a href="#" class="logo" title="Musisz tylko mocno w nie uwierzyć!">[tu jest logo]</a><br>
+        <a href="#" class="channel-name">WSZYSTKIE</a>
+    </div><a href="#" class="selected">Ważne
+    </a><a href="#">Wschodzące
+    </a><a href="#">Najnowsze</a>
+</header>
+<main>
+    {% block content %}
+        
+    {% endblock %}
+</main>
