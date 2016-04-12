@@ -1,13 +1,63 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
-</html>
+<meta charset="UTF-8">
+<title>niby-strims.pl - Główna</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<style>
+    body {
+        margin: 0;
+        font-family: Arial;
+    }
+    a {
+        text-decoration: none;
+    }
+    header {
+        width: 100%;
+        background-color: #111;
+        margin: 0;
+        white-space: nowrap;
+        color: #fff;
+    }
+    header a {
+        color: #eee;
+    }
+    header > a {
+        padding: 16px 16px;
+        margin: 0px;
+        height: 20px;
+        border-left: 1px solid #333;
+        border-right: 1px solid #333;
+        font-size: 13px;
+        display: inline-block;
+        font-weight: bold;
+    }
+    header a.selected {
+        background-color: #fff;
+        color: #222;
+        border: 1px solid #000;
+        border-bottom: 0;
+    }
+    header .place {
+        display: inline-block;
+        width: 100px;
+        text-align: center;
+        height: 40px;
+        vertical-align: middle;
+    }
+    header .channel-name {
+        color: #aaa;
+        font-size: 9px;
+    }
+</style>
+<header>
+    <div class="place">
+        <a href="#" class="logo" title="Musisz tylko mocno w nie uwierzyć!">[tu jest logo]</a><br>
+        <a href="#" class="channel-name">WSZYSTKIE</a>
+    </div><a href="#" class="selected">Ważne
+    </a><a href="#">Wschodzące
+    </a><a href="#">Najnowsze</a>
+</header>
+<main>
+    {% block content %}
+        
+    {% endblock %}
+</main>

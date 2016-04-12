@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
+{% extends "base.html.twig" %}
+
+{% block content %}
 <h2>{% trans %}channel.list{% endtrans %}</h2>
 {% if data|length %}
 <ul>
@@ -10,3 +11,4 @@
 {% else %}
 {% trans %}channel.list_empty{% endtrans %}
 {% endif %}
+{% endblock %}
