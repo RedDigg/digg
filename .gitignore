@@ -53,12 +53,6 @@
 # Backup entities generated with doctrine:generate:entities command
 */Entity/*~
 
-### Symfony Patch ###
-/web/bundles/
-/web/uploads/
-/web/css/
-/web/js/
-
 
 ### PhpStorm ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
