@@ -19,7 +19,6 @@ class ContentRelatedType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('content', IntegerType::class)
             ->add('title', TextType::class)
             ->add('url', UrlType::class)
             ->add('eng', CheckboxType::class, [

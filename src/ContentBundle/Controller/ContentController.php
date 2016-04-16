@@ -22,7 +22,7 @@ class ContentController extends Controller
     /**
      * Array of content entities.
      *
-     * @Rest\Get("/{_format}", defaults = { "_format" = "json" })
+     * @Rest\Get("/.{_format}", defaults = { "_format" = "json" })
      * @Rest\View(serializerGroups={"user","mod","admin"})
      *
      * @ApiDoc(
@@ -39,7 +39,6 @@ class ContentController extends Controller
      */
     public function indexAction()
     {
-
         $em = $this->getDoctrine()->getManager();
 
         $contents = $em->getRepository('ContentBundle:Content')->findAll();
@@ -52,13 +51,12 @@ class ContentController extends Controller
             ->setData($contents);
 
         return $this->get('fos_rest.view_handler')->handle($view);
-
     }
 
     /**
      * Creates a new Content entity.
      *
-     * @Rest\Post("/new/{_format}", defaults = { "_format" = "json" })
+     * @Rest\Post("/new/.{_format}", defaults = { "_format" = "json" })
      * @Rest\View(serializerGroups={"user","mod","admin"})
      *
      * @ApiDoc(
@@ -136,19 +134,14 @@ class ContentController extends Controller
      */
     public function showAction(Content $content)
     {
-        if ($content) {
-            $view = View::create()
-                ->setStatusCode(Codes::HTTP_OK)
-                ->setTemplate("ContentBundle:content:show.html.twig")
-                ->setTemplateVar('content')
-                ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
-                ->setData($content);
+        $view = View::create()
+            ->setStatusCode(Codes::HTTP_OK)
+            ->setTemplate("ContentBundle:content:show.html.twig")
+            ->setTemplateVar('content')
+            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
+            ->setData($content);
 
-            return $this->get('fos_rest.view_handler')->handle($view);
-        }
-
-
-        throw new \NotFoundHttpException();
+        return $this->get('fos_rest.view_handler')->handle($view);
     }
 
     /**
@@ -161,10 +154,9 @@ class ContentController extends Controller
      * )
      *
      * @Rest\View(serializerGroups={"user","mod","admin"})
+     * @param Request $request
      * @param Content $content
      * @return View
-     * @throws \NotFoundHttpException*
-     *
      * @ApiDoc(
      *  resource="/api/content/",
      *  description="Updates content data",
@@ -183,10 +175,6 @@ class ContentController extends Controller
      */
     public function editAction(Request $request, Content $content)
     {
-        if (!$content) {
-            throw $this->createNotFoundException();
-        }
-
         $editForm = $this->createForm('ContentBundle\Form\ContentType', $content);
         $editForm->submit($request->request->all(), false);
 
@@ -237,32 +225,32 @@ class ContentController extends Controller
      */
     public function deleteAction(Request $request, Content $content)
     {
-        if (!$content) {
-            throw $this->createNotFoundException();
-        }
-
         $form = $this->createFormBuilder()->setMethod('DELETE')->getForm();
         $form->submit($request->request->get($form->getName()));
+
+        $view = View::create()
+            ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($content);
             $em->flush();
 
-            return View::create()
+            $view
                 ->setStatusCode(Codes::HTTP_OK)
                 ->setTemplate("ContentBundle:content:index.html.twig")
                 ->setTemplateVar('contents')
-                ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
-                ->setData(['status'=>true]);
+                ->setData(['status' => true]);
+        } else {
+            $view
+                ->setStatusCode(Codes::HTTP_OK)
+                ->setTemplate("ContentBundle:content:index.html.twig")
+                ->setTemplateVar('contents')
+                ->setData($form);
         }
+        return $this->get('fos_rest.view_handler')->handle($view);
 
-        return View::create()
-            ->setStatusCode(Codes::HTTP_OK)
-            ->setTemplate("ContentBundle:content:index.html.twig")
-            ->setTemplateVar('contents')
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
-            ->setData($form);
+
     }
 
 }

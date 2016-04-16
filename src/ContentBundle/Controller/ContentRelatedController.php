@@ -22,52 +22,61 @@ use FOS\RestBundle\Controller\Annotations as Rest;
  */
 class ContentRelatedController extends Controller
 {
+
+
     /**
-     * Array of ContentRelated entities.
+     * Array of content related elements.
      *
-     * @Rest\Get("/{_format}", defaults = { "_format" = "json" }
-     * )
+     * @Rest\Get("/.{_format}", defaults = { "_format" = "json" })
      * @Rest\View(serializerGroups={"user","mod","admin"})
      *
      * @ApiDoc(
-     *  resource="/api/content/relatd/",
-     *  description="Returns contentRelated for specified Content",
+     *  resource="/api/content/",
+     *  description="Returns contents",
      *
      *  output={
-     *   "class"="ContentBundle\Entity\ContentRelated",
+     *   "class"="ContentBundle\Entity\Content",
      *   "parsers"={"Nelmio\ApiDocBundle\Parser\JmsMetadataParser"},
      *   "groups"={"user","mod","admin"}
      *  }
      * )
-     * @param Content $content
      * @return View
      */
     public function indexAction()
     {
-            $em = $this->getDoctrine()->getManager();
-            $contentRelated = $em->getRepository('ContentBundle:ContentRelated')->findAll();
-            $view = View::create()
-                ->setStatusCode(Codes::HTTP_OK)
-                ->setTemplate("ContentBundle:contentRelated:show.html.twig")
-                ->setTemplateVar('contentRelated')
-                ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
-                ->setData($contentRelated);
 
-            return $this->get('fos_rest.view_handler')->handle($view);
+        $em = $this->getDoctrine()->getManager();
+
+        $contents = $em->getRepository('ContentBundle:Content')->findAll();
+
+        $view = View::create()
+            ->setStatusCode(Codes::HTTP_OK)
+            ->setTemplate("ContentBundle:content:index.html.twig")
+            ->setTemplateVar('contents')
+            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
+            ->setData($contents);
+
+        return $this->get('fos_rest.view_handler')->handle($view);
+
     }
 
     /**
      * Creates a new ContentRelated entity.
      *
+     * @param Request $request
+     * @param Content $content
+     * @return View
+     * @internal param String $_format
+     *
      * @Rest\Post(
-     *     "new/{_format}",
+     *     "new/.{_format}",
      *     defaults = { "_format" = "json" }
      * )
      * @Rest\View(serializerGroups={"user","mod","admin"})
      *
      *
      * @ApiDoc(
-     *  resource="/api/content/related",
+     *  resource="/api/content/",
      *  description="Creates new related content",
      *
      *  input={
@@ -81,12 +90,11 @@ class ContentRelatedController extends Controller
      *   "groups"={"user","mod","admin"}
      *  }
      * )
-     * @return View
      */
     public function newAction(Request $request, Content $content)
     {
 
-        if(!$content) {
+        if (!$content) {
             throw $this->createNotFoundException();
         }
         $contentRelated = new ContentRelated();
@@ -118,7 +126,6 @@ class ContentRelatedController extends Controller
         }
 
         return $this->get('fos_rest.view_handler')->handle($view);
-
     }
 
     /**
@@ -137,7 +144,7 @@ class ContentRelatedController extends Controller
      *
      * @ApiDoc(
      *  resource="/api/content/",
-     *  description="Returns content data",
+     *  description="Returns content related data",
      *
      *  output={
      *   "class"="EntriesBundle\Entity\Content",
@@ -146,7 +153,7 @@ class ContentRelatedController extends Controller
      *  }
      * )
      */
-    public function showAction(ContentRelated $contentRelated)
+    public function showAction(Content $content, ContentRelated $contentRelated)
     {
         if ($contentRelated) {
             $view = View::create()
@@ -174,6 +181,7 @@ class ContentRelatedController extends Controller
      *
      * @Rest\View(serializerGroups={"user","mod","admin"})
      * @param Content $content
+     * @param ContentRelated $contentRelated
      * @return View
      * @throws \NotFoundHttpException*
      *
@@ -193,7 +201,7 @@ class ContentRelatedController extends Controller
      *  }
      * )
      */
-    public function editAction(Request $request, ContentRelated $contentRelated)
+    public function editAction(Request $request, Content $content, ContentRelated $contentRelated)
     {
         // TODO: fix PATCH
         if (!$contentRelated) {
@@ -239,6 +247,7 @@ class ContentRelatedController extends Controller
      *
      * @Rest\View(serializerGroups={"user","mod","admin"})
      * @param Request $request
+     * @param Content $content
      * @param ContentRelated $contentRelated
      *
      * @return View
@@ -249,7 +258,7 @@ class ContentRelatedController extends Controller
      *  description="Deletes ContentRelated"
      * )
      */
-    public function deleteAction(Request $request, ContentRelated $contentRelated)
+    public function deleteAction(Request $request, Content $content, ContentRelated $contentRelated)
     {
         if (!$contentRelated) {
             throw $this->createNotFoundException();
@@ -268,7 +277,7 @@ class ContentRelatedController extends Controller
                 ->setTemplate("ContentBundle:content:index.html.twig")
                 ->setTemplateVar('contents')
                 ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
-                ->setData(['status'=>true]);
+                ->setData(['status' => true]);
         }
 
         return View::create()
@@ -291,7 +300,6 @@ class ContentRelatedController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('content_related_delete', array('id' => $contentRelated->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

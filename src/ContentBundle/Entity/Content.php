@@ -2,6 +2,7 @@
 
 namespace ContentBundle\Entity;
 
+use ChannelBundle\Entity\Channel;
 use CoreBundle\Traits\Bleamable;
 use CoreBundle\Traits\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
@@ -35,11 +36,6 @@ class Content
      * @JMS\Groups({"user","mod","admin"})
      */
     protected $id;
-
-    public function __construct()
-    {
-    }
-
 
     /**
      * [min 5 chars, max 150]
@@ -161,6 +157,23 @@ class Content
      * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
      */
     protected $updatedBy;
+
+    /**
+     * Channels list
+     *
+     * @Assert\NotBlank(message = "Field 'channels' should not be blank.")
+     *
+     * @Expose
+     * @JMS\Groups({"user","mod","admin"})
+     * @ORM\ManyToMany(targetEntity="ChannelBundle\Entity\Channel")
+     * @ORM\JoinTable(name="content_channels")
+     */
+    protected $channels;
+
+    public function __construct()
+    {
+        $this->channels = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -482,5 +495,23 @@ class Content
     public function getUpdatedBy()
     {
         return $this->updatedBy;
+    }
+
+
+    public function getChannels()
+    {
+        return $this->channels;
+    }
+
+    public function addChannels(Channel $channel)
+    {
+        $this->channels[] = $channel;
+
+        return $this;
+    }
+
+    public function removeChannels(Channel $channel)
+    {
+        $this->channels->removeElement($channel);
     }
 }
