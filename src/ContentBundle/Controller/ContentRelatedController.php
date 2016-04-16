@@ -94,9 +94,6 @@ class ContentRelatedController extends Controller
     public function newAction(Request $request, Content $content)
     {
 
-        if (!$content) {
-            throw $this->createNotFoundException();
-        }
         $contentRelated = new ContentRelated();
         $contentRelated->setContent($content);
 
@@ -120,7 +117,7 @@ class ContentRelatedController extends Controller
             $view
                 ->setStatusCode(Codes::HTTP_BAD_REQUEST)
                 ->setTemplateVar('error')
-                ->setData($form)
+                ->setData($this->get('validator')->validate($contentRelated))
                 ->setTemplateData(['message' => $form->getErrors(true)])
                 ->setTemplate('ContentBundle:Default:new.html.twig');
         }
@@ -139,9 +136,8 @@ class ContentRelatedController extends Controller
      *
      * @Rest\View(serializerGroups={"user","mod","admin"})
      * @param Content $content
+     * @param ContentRelated $contentRelated
      * @return View
-     * @throws \NotFoundHttpException*
-     *
      * @ApiDoc(
      *  resource="/api/content/",
      *  description="Returns content related data",
@@ -155,19 +151,15 @@ class ContentRelatedController extends Controller
      */
     public function showAction(Content $content, ContentRelated $contentRelated)
     {
-        if ($contentRelated) {
-            $view = View::create()
-                ->setStatusCode(Codes::HTTP_OK)
-                ->setTemplate("ContentBundle:contentRelated:show.html.twig")
-                ->setTemplateVar('contentRelated')
-                ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
-                ->setData([$contentRelated]);
+        $view = View::create()
+            ->setStatusCode(Codes::HTTP_OK)
+            ->setTemplate("ContentBundle:contentRelated:show.html.twig")
+            ->setTemplateVar('contentRelated')
+            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
+            ->setData([$contentRelated]);
 
-            return $this->get('fos_rest.view_handler')->handle($view);
-        }
+        return $this->get('fos_rest.view_handler')->handle($view);
 
-
-        throw new \NotFoundHttpException();
     }
 
     /**
@@ -204,9 +196,7 @@ class ContentRelatedController extends Controller
     public function editAction(Request $request, Content $content, ContentRelated $contentRelated)
     {
         // TODO: fix PATCH
-        if (!$contentRelated) {
-            throw $this->createNotFoundException();
-        }
+
 
         $editForm = $this->createForm('ContentBundle\Form\ContentRelatedType', $contentRelated, ['method' => 'PATCH']);
         $editForm->submit($request->request->all());
@@ -228,7 +218,7 @@ class ContentRelatedController extends Controller
             $view
                 ->setStatusCode(Codes::HTTP_BAD_REQUEST)
                 ->setTemplateVar('error')
-                ->setData($editForm)
+                ->setData($this->get('validator')->validate($contentRelated))
                 ->setTemplateData(['message' => $editForm->getErrors(true)])
                 ->setTemplate('ContentBundle:content:edit.html.twig');
         }
@@ -285,7 +275,7 @@ class ContentRelatedController extends Controller
             ->setTemplate("ContentBundle:content:index.html.twig")
             ->setTemplateVar('contents')
             ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
-            ->setData($form);
+            ->setData($this->get('validator')->validate($contentRelated));
     }
 
     /**

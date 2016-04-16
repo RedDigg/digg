@@ -100,9 +100,9 @@ class ContentController extends Controller
             $view
                 ->setStatusCode(Codes::HTTP_BAD_REQUEST)
                 ->setTemplateVar('error')
-                ->setData($form)
+                ->setData($this->get('validator')->validate($content))
                 ->setTemplateData(['message' => $form->getErrors(true)])
-                ->setTemplate('ContentBundle:Default:new.html.twig');
+                ->setTemplate('ContentBundle:content:show.html.twig');
         }
 
         return $this->get('fos_rest.view_handler')->handle($view);
@@ -196,7 +196,7 @@ class ContentController extends Controller
             $view
                 ->setStatusCode(Codes::HTTP_BAD_REQUEST)
                 ->setTemplateVar('error')
-                ->setData($editForm)
+                ->setData($this->get('validator')->validate($content))
                 ->setTemplateData(['message' => $editForm->getErrors(true)])
                 ->setTemplate('ContentBundle:content:show.html.twig');
         }
@@ -246,7 +246,7 @@ class ContentController extends Controller
                 ->setStatusCode(Codes::HTTP_OK)
                 ->setTemplate("ContentBundle:content:index.html.twig")
                 ->setTemplateVar('contents')
-                ->setData($form);
+                ->setData($this->get('validator')->validate($content));
         }
         return $this->get('fos_rest.view_handler')->handle($view);
 
