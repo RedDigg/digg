@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation as JMS;
  * Channel
  *
  * @ORM\Table(name="channel")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="ChannelBundle\Entity\Repository\ChannelRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ExclusionPolicy("all")
  */

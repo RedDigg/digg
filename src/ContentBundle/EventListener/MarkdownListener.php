@@ -40,7 +40,7 @@ class MarkdownListener
         if ($entity instanceof Content) {
 
             $cm = $this->_container->get('core.manager');
-            $text = $cm->parseContentBody($entity->getDescription());
+            $text = $cm->parseText($entity->getDescription());
             $entity->setDescription($text);
         }
     }

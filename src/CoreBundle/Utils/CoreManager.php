@@ -22,7 +22,7 @@ class CoreManager
     }
 
     // Changes "@username" and "g/groupname" into markdown links
-    public function parseContentBody($body)
+    public function parseText($body)
     {
         $user = $this->_em->getRepository(User::class);
         $channel = $this->_em->getRepository(Channel::class);
@@ -55,9 +55,11 @@ class CoreManager
             return '@' . $matches[1];
         }, $body);
 
-
+        /**
+         * search for group in text
+         */
         $body = preg_replace_callback('/(?<=^|\s)(?<=\s|^)g\/([a-z0-9_-żźćńółęąśŻŹĆĄŚĘŁÓŃ]+)(?=$|\s|:|.)/i', function ($matches) use ($channel) {
-            $target = $channel->findOneBy(['name' => $matches[1]]);
+            $target = $channel->findByNameInsensitive($matches[1]);
 
 //            $fakeGroup = class_exists('Folders\\' . studly_case($matches[1]));
 //            if ($target || $fakeGroup) {

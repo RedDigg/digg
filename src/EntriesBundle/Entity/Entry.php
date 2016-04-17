@@ -43,7 +43,15 @@ class Entry
      */
     protected $body;
 
-
+    /**
+     * @ORM\OneToMany(
+     *      targetEntity="EntriesBundle\Entity\EntryComment",
+     *      mappedBy="post",
+     *      orphanRemoval=true
+     * )
+     * @ORM\OrderBy({"publishedAt" = "ASC"})
+     */
+    protected $comments;
 
 
     /**
