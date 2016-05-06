@@ -170,9 +170,23 @@ class Content
      */
     protected $channels;
 
+    /**
+     * Content comments
+     *
+     * @Expose
+     * @JMS\Groups({"user","mod","admin"})
+     * @ORM\OneToMany(targetEntity="ContentBundle\Entity\ContentComment", mappedBy="content")
+     */
+    protected $comments;
+
+    /**
+     * Constructor
+     */
     public function __construct()
     {
+        $this->relatedContent = new \Doctrine\Common\Collections\ArrayCollection();
         $this->channels = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -436,20 +450,6 @@ class Content
     }
 
     /**
-     * Set relatedContent
-     *
-     * @param string $relatedContent
-     *
-     * @return Content
-     */
-    public function setRelatedContent($relatedContent)
-    {
-        $this->relatedContent = $relatedContent;
-
-        return $this;
-    }
-
-    /**
      * Set createdBy
      *
      * @param \UserBundle\Entity\User $createdBy
@@ -497,21 +497,71 @@ class Content
         return $this->updatedBy;
     }
 
-
-    public function getChannels()
-    {
-        return $this->channels;
-    }
-
-    public function addChannels(Channel $channel)
+    /**
+     * Add channel
+     *
+     * @param \ChannelBundle\Entity\Channel $channel
+     *
+     * @return Content
+     */
+    public function addChannel(\ChannelBundle\Entity\Channel $channel)
     {
         $this->channels[] = $channel;
 
         return $this;
     }
 
-    public function removeChannels(Channel $channel)
+    /**
+     * Remove channel
+     *
+     * @param \ChannelBundle\Entity\Channel $channel
+     */
+    public function removeChannel(\ChannelBundle\Entity\Channel $channel)
     {
         $this->channels->removeElement($channel);
+    }
+
+    /**
+     * Get channels
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getChannels()
+    {
+        return $this->channels;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \ContentBundle\Entity\ContentComment $comment
+     *
+     * @return Content
+     */
+    public function addComment(\ContentBundle\Entity\ContentComment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \ContentBundle\Entity\ContentComment $comment
+     */
+    public function removeComment(\ContentBundle\Entity\ContentComment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

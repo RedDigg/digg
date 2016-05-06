@@ -29,6 +29,11 @@ class ContentController extends Controller
      *  resource="/api/content/",
      *  description="Returns contents",
      *
+     *  filters={
+     *      {"name"="page", "dataType"="integer", "default"="1"},
+     *      {"name"="limit", "dataType"="integer", "default"="50"}
+     *  },
+     *
      *  output={
      *   "class"="ContentBundle\Entity\Content",
      *   "parsers"={"Nelmio\ApiDocBundle\Parser\JmsMetadataParser"},
@@ -37,8 +42,11 @@ class ContentController extends Controller
      * )
      * @return View
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+        $page = $request->request->get('page', 1);
+        $limit = $request->request->get('page', 50);
+
         $em = $this->getDoctrine()->getManager();
 
         $contents = $em->getRepository('ContentBundle:Content')->findAll();
