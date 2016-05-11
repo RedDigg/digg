@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="ContentBundle\Entity\Repository\ContentRepository")
  * @ORM\Table()
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ExclusionPolicy("all")

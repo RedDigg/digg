@@ -13,6 +13,7 @@ use FOS\RestBundle\Util\Codes;
 use JMS\Serializer\SerializationContext;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @Rest\NamePrefix("content_")
@@ -31,7 +32,9 @@ class ContentController extends Controller
      *
      *  filters={
      *      {"name"="page", "dataType"="integer", "default"="1"},
-     *      {"name"="limit", "dataType"="integer", "default"="50"}
+     *      {"name"="limit", "dataType"="integer", "default"="50"},
+     *      {"name"="type", "dataType"="string", "default"="newest", "options" ="newest|hot"},
+     *      {"name"="channels", "dataType"="string", "default"="empty, channel names after commas, ex: 'nsfw,geeks,movies' "},
      *  },
      *
      *  output={
@@ -40,22 +43,45 @@ class ContentController extends Controller
      *   "groups"={"user","mod","admin"}
      *  }
      * )
+     * @param Request $request
      * @return View
      */
     public function indexAction(Request $request)
     {
+
         $page = $request->request->get('page', 1);
         $limit = $request->request->get('page', 50);
+        $channels = $request->request->get('channels', null);
+        $type = $request->request->get('type', 'newest');
+
+        if(!is_null($channels)) {
+            $channels = explode(',', preg_replace('/\s+/', '', $channels));
+        } else {
+            // TODO: get from DB default channels for the content page
+            $channels[] = 'nsfw';
+        }
+
+        if(!in_array($type, ['newest','hot'])) {
+            throw new BadRequestHttpException(sprintf("Parameter '%s' is not valid.", $type));
+        }
 
         $em = $this->getDoctrine()->getManager();
 
-        $contents = $em->getRepository('ContentBundle:Content')->findAll();
+        switch($type) {
+            case 'newest':
+                $contents = $em->getRepository('ContentBundle:Content')->getNewestContents($page, $limit, $channels);
+                break;
+            case 'hot':
+                $contents = $em->getRepository('ContentBundle:Content')->findAll();
+                break;
+        }
 
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
         $view = View::create()
             ->setStatusCode(Codes::HTTP_OK)
             ->setTemplate("ContentBundle:content:index.html.twig")
             ->setTemplateVar('contents')
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups))
             ->setData($contents);
 
         return $this->get('fos_rest.view_handler')->handle($view);
