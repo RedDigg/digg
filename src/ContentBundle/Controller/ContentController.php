@@ -54,20 +54,20 @@ class ContentController extends Controller
         $channels = $request->request->get('channels', null);
         $type = $request->request->get('type', 'newest');
 
-        if(!is_null($channels)) {
+        if (!is_null($channels)) {
             $channels = explode(',', preg_replace('/\s+/', '', $channels));
         } else {
             // TODO: get from DB default channels for the content page
-            $channels[] = 'nsfw';
+            $channels = [1, 2, 3, 4];
         }
 
-        if(!in_array($type, ['newest','hot'])) {
+        if (!in_array($type, ['newest', 'hot'])) {
             throw new BadRequestHttpException(sprintf("Parameter '%s' is not valid.", $type));
         }
 
         $em = $this->getDoctrine()->getManager();
 
-        switch($type) {
+        switch ($type) {
             case 'newest':
                 $contents = $em->getRepository('ContentBundle:Content')->getNewestContents($page, $limit, $channels);
                 break;
@@ -77,11 +77,15 @@ class ContentController extends Controller
         }
 
         $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+        $serializationContext = SerializationContext::create()
+            ->setGroups($groups)
+            ->enableMaxDepthChecks();
+
         $view = View::create()
             ->setStatusCode(Codes::HTTP_OK)
             ->setTemplate("ContentBundle:content:index.html.twig")
             ->setTemplateVar('contents')
-            ->setSerializationContext(SerializationContext::create()->setGroups($groups))
+            ->setSerializationContext($serializationContext)
             ->setData($contents);
 
         return $this->get('fos_rest.view_handler')->handle($view);
@@ -282,6 +286,7 @@ class ContentController extends Controller
                 ->setTemplateVar('contents')
                 ->setData($this->get('validator')->validate($content));
         }
+
         return $this->get('fos_rest.view_handler')->handle($view);
 
 

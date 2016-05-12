@@ -8,7 +8,6 @@
 
 namespace ContentBundle\Entity;
 
-use ChannelBundle\Entity\Channel;
 use CoreBundle\Traits\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -38,6 +37,8 @@ class ContentComment
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
+     * @JMS\Groups({"user","mod","admin"})
      */
     protected $id;
 
@@ -50,13 +51,13 @@ class ContentComment
 
     /**
      * @ORM\ManyToOne(targetEntity="ContentBundle\Entity\Content", inversedBy="comments", cascade={"persist"})
-     * @ORM\JoinColumn(name="content", referencedColumnName="id")
+     * @ORM\JoinColumn(name="content", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="ContentComment", inversedBy="children", cascade={"persist"})
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $parent;
 
@@ -73,6 +74,8 @@ class ContentComment
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
+     * @Expose
+     * @JMS\Groups({"user","mod","admin"})
      */
     protected $createdBy;
 
@@ -83,6 +86,8 @@ class ContentComment
      * @Gedmo\Blameable(on="update")
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
      * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
+     * @Expose
+     * @JMS\Groups({"mod","admin"})
      */
     protected $updatedBy;
 
@@ -105,6 +110,19 @@ class ContentComment
 //     */
 //    private $totalDownvotes;
 
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("parent")
+     * @JMS\Groups({"user","mod","admin"})
+     */
+    public function virtualParent()
+    {
+        if($this->parent) {
+            return $this->getParent()->getId();
+        }
+        return null;
+    }
 
     /**
      * Get id

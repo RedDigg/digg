@@ -54,7 +54,7 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface, Ordered
 
     }
 
-    private function userList()
+    public function userList()
     {
         $list = [
             [

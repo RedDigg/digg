@@ -96,6 +96,8 @@ class Channel
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      * @Expose
+     * @JMS\Groups({"user","mod","admin"})
+     * @Expose
      */
     private $createdAt;
 
@@ -103,6 +105,8 @@ class Channel
      * @var \DateTime
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime")
+     * @JMS\Groups({"user","mod","admin"})
+     * @Expose
      */
     protected $updatedAt;
 
@@ -114,6 +118,8 @@ class Channel
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
+     * @JMS\Groups({"user","mod","admin"})
+     * @Expose
      */
     protected $createdBy;
 
@@ -124,6 +130,8 @@ class Channel
      * @Gedmo\Blameable(on="update")
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
      * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
+     * @JMS\Groups({"user","mod","admin"})
+     * @Expose
      */
     protected $updatedBy;
 
