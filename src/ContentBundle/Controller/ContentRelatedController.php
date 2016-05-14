@@ -281,7 +281,7 @@ class ContentRelatedController extends Controller
             ->setStatusCode(Codes::HTTP_OK)
             ->setTemplate("ContentBundle:content:index.html.twig")
             ->setTemplateVar('contents')
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups))
             ->setData($this->get('validator')->validate($contentRelated));
     }
 

@@ -45,12 +45,13 @@ class ChannelController extends BaseController
         $em = $this->getDoctrine()->getManager();
 
         $contents = $em->getRepository(Channel::class)->findAll();
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
 
         $view = View::create()
             ->setStatusCode(Codes::HTTP_OK)
             ->setTemplate("ChannelBundle:Default:index.html.twig")
             ->setTemplateVar('channels')
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups))
             ->setData($contents);
 
         return $this->get('fos_rest.view_handler')->handle($view);
@@ -81,11 +82,13 @@ class ChannelController extends BaseController
      */
     public function showAction(Channel $channel)
     {
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
         $view = View::create()
             ->setStatusCode(Codes::HTTP_OK)
             ->setTemplate("ChannelBundle:Default:show.html.twig")
             ->setTemplateVar('channel')
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups))
             ->setData($channel);
 
         return $this->get('fos_rest.view_handler')->handle($view);
@@ -121,8 +124,10 @@ class ChannelController extends BaseController
 
         $form->submit($request->request->all());
 
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
         $view = View::create()
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -195,8 +200,10 @@ class ChannelController extends BaseController
         $editForm = $this->createForm('ChannelBundle\Form\ChannelType', $channel);
         $editForm->submit($request->request->all(), false);
 
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
         $view = View::create()
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups));
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -246,8 +253,10 @@ class ChannelController extends BaseController
         $form = $this->createFormBuilder()->setMethod('DELETE')->getForm();
         $form->submit($request->request->get($form->getName()));
 
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
         $view = View::create()
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
