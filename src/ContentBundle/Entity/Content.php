@@ -180,6 +180,16 @@ class Content
     protected $comments;
 
     /**
+     * DateTime of deletion. (For PowerUsers only)
+     *
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Expose
+     * @JMS\Groups({"mod","admin"})
+     */
+    protected $deletedAt;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -187,6 +197,44 @@ class Content
         $this->relatedContent = new \Doctrine\Common\Collections\ArrayCollection();
         $this->channels = new \Doctrine\Common\Collections\ArrayCollection();
         $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Sets deletedAt.
+     *
+     * @param \Datetime|null $deletedAt
+     *
+     * @return $this
+     */
+    public function setDeletedAt(\DateTime $deletedAt = null)
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    /**
+     * Returns deletedAt.
+     *
+     * @return \DateTime
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * Is deleted?
+     *
+     * @return bool
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("deleted")
+     * @JMS\Groups({"mod","admin"})
+     */
+    public function isDeleted()
+    {
+        return null !== $this->deletedAt;
     }
 
     /**

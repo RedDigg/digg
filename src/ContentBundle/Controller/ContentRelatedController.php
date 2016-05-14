@@ -49,11 +49,13 @@ class ContentRelatedController extends Controller
 
         $contents = $em->getRepository('ContentBundle:Content')->findAll();
 
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
         $view = View::create()
             ->setStatusCode(Codes::HTTP_OK)
             ->setTemplate("ContentBundle:content:index.html.twig")
             ->setTemplateVar('contents')
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups))
             ->setData($contents);
 
         return $this->get('fos_rest.view_handler')->handle($view);
@@ -100,8 +102,10 @@ class ContentRelatedController extends Controller
         $form = $this->createForm('ContentBundle\Form\ContentRelatedType', $contentRelated);
         $form->submit($request->request->all());
 
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
         $view = View::create()
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -151,11 +155,13 @@ class ContentRelatedController extends Controller
      */
     public function showAction(Content $content, ContentRelated $contentRelated)
     {
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
         $view = View::create()
             ->setStatusCode(Codes::HTTP_OK)
             ->setTemplate("ContentBundle:contentRelated:show.html.twig")
             ->setTemplateVar('contentRelated')
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups))
             ->setData([$contentRelated]);
 
         return $this->get('fos_rest.view_handler')->handle($view);
@@ -195,14 +201,13 @@ class ContentRelatedController extends Controller
      */
     public function editAction(Request $request, Content $content, ContentRelated $contentRelated)
     {
-        // TODO: fix PATCH
+        $editForm = $this->createForm('ContentBundle\Form\ContentRelatedType', $contentRelated);
+        $editForm->submit($request->request->all(), false);
 
-
-        $editForm = $this->createForm('ContentBundle\Form\ContentRelatedType', $contentRelated, ['method' => 'PATCH']);
-        $editForm->submit($request->request->all());
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
 
         $view = View::create()
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups));
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -257,6 +262,8 @@ class ContentRelatedController extends Controller
         $form = $this->createFormBuilder()->setMethod('DELETE')->getForm();
         $form->submit($request->request->get($form->getName()));
 
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($contentRelated);
@@ -266,7 +273,7 @@ class ContentRelatedController extends Controller
                 ->setStatusCode(Codes::HTTP_OK)
                 ->setTemplate("ContentBundle:content:index.html.twig")
                 ->setTemplateVar('contents')
-                ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
+                ->setSerializationContext(SerializationContext::create()->setGroups($groups))
                 ->setData(['status' => true]);
         }
 

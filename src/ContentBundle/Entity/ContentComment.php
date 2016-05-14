@@ -29,7 +29,6 @@ class ContentComment
      * Hook SoftDeleteable behavior
      * updates deletedAt field
      */
-    use SoftDeleteableEntity;
     use Timestampable;
 
 
@@ -42,10 +41,12 @@ class ContentComment
      */
     protected $id;
 
+    // TODO: Show body in the API DOCS. Now it is not visible, due to missing @JMS\Groups
     /**
+     * Comment body. Null if comment is deleted.
+     *
      * @ORM\Column(type="text")
      * @Expose
-     * @JMS\Groups({"user","mod","admin"})
      */
     protected $body;
 
@@ -91,6 +92,16 @@ class ContentComment
      */
     protected $updatedBy;
 
+    /**
+     * DateTime of deletion. (For PowerUsers only)
+     *
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Expose
+     * @JMS\Groups({"mod","admin"})
+     */
+    protected $deletedAt;
+
 //    /**
 //     * @ORM\ManyToMany(targetEntity="Vote", cascade={"all"}, inversedBy="commentUpvotes")
 //     * @ORM\JoinTable(name="comment_upvotes")
@@ -118,10 +129,76 @@ class ContentComment
      */
     public function virtualParent()
     {
-        if($this->parent) {
+        if ($this->parent) {
             return $this->getParent()->getId();
         }
+
         return null;
+    }
+
+    /**
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("body")
+     * @JMS\Groups({"user"})
+     */
+    public function virtualBodyUser()
+    {
+        if ($this->deletedAt) {
+            return null;
+        }
+
+        return $this->body;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("body")
+     * @JMS\Groups({"mod","admin"})
+     */
+    public function virtualBodyPowerUser()
+    {
+        return $this->body;
+    }
+
+
+
+    /**
+     * Sets deletedAt.
+     *
+     * @param \Datetime|null $deletedAt
+     *
+     * @return $this
+     */
+    public function setDeletedAt(\DateTime $deletedAt = null)
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    /**
+     * Returns deletedAt.
+     *
+     * @return \DateTime
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * Is deleted?
+     *
+     * @return bool
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("deleted")
+     * @JMS\Groups({"user","mod","admin"})
+     */
+    public function isDeleted()
+    {
+        return null !== $this->deletedAt;
     }
 
     /**
@@ -157,6 +234,7 @@ class ContentComment
     {
         return $this->body;
     }
+
     /**
      * Constructor
      */

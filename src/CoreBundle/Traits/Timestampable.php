@@ -26,7 +26,7 @@ trait Timestampable
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="updated_at", type="datetime")
      * @Expose
-     * @JMS\Groups({"user","mod","admin"})
+     * @JMS\Groups({"mod","admin"})
      */
     protected $updatedAt;
 

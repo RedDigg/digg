@@ -34,7 +34,12 @@ class ContentController extends Controller
      *      {"name"="page", "dataType"="integer", "default"="1"},
      *      {"name"="limit", "dataType"="integer", "default"="50"},
      *      {"name"="type", "dataType"="string", "default"="newest", "options" ="newest|hot"},
-     *      {"name"="channels", "dataType"="string", "default"="empty, channel names after commas, ex: 'nsfw,geeks,movies' "},
+     *      {
+     *          "name"="channels",
+     *          "dataType"="string",
+     *          "default"="",
+     *          "description"="Channel IDs or names after commas, ex: 'nsfw,geeks,movies,100,150'. Leave empty for all channels."
+     *      },
      *  },
      *
      *  output={
@@ -49,23 +54,25 @@ class ContentController extends Controller
     public function indexAction(Request $request)
     {
 
-        $page = $request->request->get('page', 1);
-        $limit = $request->request->get('page', 50);
-        $channels = $request->request->get('channels', null);
-        $type = $request->request->get('type', 'newest');
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 50);
+        $channels = $request->query->get('channels', null);
+        $type = $request->query->get('type', 'newest');
 
-        if (!is_null($channels)) {
+        if ($channels) {
             $channels = explode(',', preg_replace('/\s+/', '', $channels));
-        } else {
-            // TODO: get from DB default channels for the content page
-            $channels = [1, 2, 3, 4];
         }
 
         if (!in_array($type, ['newest', 'hot'])) {
             throw new BadRequestHttpException(sprintf("Parameter '%s' is not valid.", $type));
         }
 
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        //show deleted content for the moderator
+        if($this->get('security.authorization_checker')->isGranted('ROLE_MODERATOR')) {
+            $em->getFilters()->disable('softdeleteable');
+        }
 
         switch ($type) {
             case 'newest':
@@ -112,6 +119,7 @@ class ContentController extends Controller
      *   "groups"={"user","mod","admin"}
      *  }
      * )
+     * @param Request $request
      * @return View
      */
     public function newAction(Request $request)
@@ -120,8 +128,10 @@ class ContentController extends Controller
         $form = $this->createForm('ContentBundle\Form\ContentType', $content);
         $form->submit($request->request->all());
 
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
         $view = View::create()
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -172,11 +182,22 @@ class ContentController extends Controller
      */
     public function showAction(Content $content)
     {
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->getFilters()->disable('softdeleteable');
+
+        if(!$this->get('security.authorization_checker')->isGranted('ROLE_MODERATOR')) {
+            if(!$content) {
+                $this->createNotFoundException();
+            }
+        }
+
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
         $view = View::create()
             ->setStatusCode(Codes::HTTP_OK)
             ->setTemplate("ContentBundle:content:show.html.twig")
             ->setTemplateVar('content')
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups))
             ->setData($content);
 
         return $this->get('fos_rest.view_handler')->handle($view);
@@ -216,8 +237,9 @@ class ContentController extends Controller
         $editForm = $this->createForm('ContentBundle\Form\ContentType', $content);
         $editForm->submit($request->request->all(), false);
 
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
         $view = View::create()
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups));
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -266,8 +288,9 @@ class ContentController extends Controller
         $form = $this->createFormBuilder()->setMethod('DELETE')->getForm();
         $form->submit($request->request->get($form->getName()));
 
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
         $view = View::create()
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
