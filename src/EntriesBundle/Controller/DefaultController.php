@@ -19,6 +19,13 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 class DefaultController extends BaseController
 {
 
+    private $_userGrantedApiGroups;
+
+    public function __construct()
+    {
+        $this->_userGrantedApiGroups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+    }
+
     /**
      * @Rest\Get("/")
      * @Rest\View(serializerGroups={"user","mod","admin"})
@@ -34,7 +41,7 @@ class DefaultController extends BaseController
         return View::create()
             ->setStatusCode(200)
             ->setFormat('json')
-            ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
+            ->setSerializationContext(SerializationContext::create()->setGroups($this->_userGrantedApiGroups))
             ->setData([1]);
     }
 
@@ -63,23 +70,13 @@ class DefaultController extends BaseController
      */
     public function getEntryAction(Entry $entry)
     {
-        echo $this->getUserIP();
-
         if ($entry) {
-            // TODO: get user group
-            if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-                $roles = ['admin'];
-            } elseif ($this->get('security.authorization_checker')->isGranted('ROLE_MODERATOR')) {
-                $roles = ['mod'];
-            } else {
-                $roles = ['user'];
-            }
 
             $view = View::create()
                 ->setStatusCode(Codes::HTTP_OK)
                 ->setTemplate("EntriesBundle:Default:entry.html.twig")
                 ->setTemplateVar('entry')
-                ->setSerializationContext(SerializationContext::create()->setGroups($roles))
+                ->setSerializationContext(SerializationContext::create()->setGroups($this->_userGrantedApiGroups))
                 ->setData($entry);
 
             return $this->handleView($view);
@@ -124,7 +121,7 @@ class DefaultController extends BaseController
         return View::create()
             ->setStatusCode(200)
             ->setFormat('json')
-            ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
+            ->setSerializationContext(SerializationContext::create()->setGroups($this->_userGrantedApiGroups))
             ->setData(['lala']);
     }
 
@@ -140,7 +137,7 @@ class DefaultController extends BaseController
         return View::create()
             ->setStatusCode(200)
             ->setFormat('json')
-            ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
+            ->setSerializationContext(SerializationContext::create()->setGroups($this->_userGrantedApiGroups))
             ->setData($entry);
     }
 
@@ -155,7 +152,7 @@ class DefaultController extends BaseController
         return View::create()
             ->setStatusCode(200)
             ->setFormat('json')
-            ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
+            ->setSerializationContext(SerializationContext::create()->setGroups($this->_userGrantedApiGroups))
             ->setData([1]);
     }
 

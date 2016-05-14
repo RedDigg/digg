@@ -31,6 +31,7 @@
     "gedmo/doctrine-extensions": "~2.3,>2.3.1",
     "friendsofsymfony/user-bundle": "~2.0@dev",
     "stof/doctrine-extensions-bundle": "^1.2",
+    "doctrine/doctrine-fixtures-bundle": "^2.2@dev",
     "knplabs/knp-time-bundle": "^1.5",
     "friendsofsymfony/rest-bundle": "^1.7",
     "jms/serializer": "^1.0",
@@ -41,7 +42,8 @@
   },
   "require-dev": {
     "sensio/generator-bundle": "^3.0",
-    "symfony/phpunit-bridge": "^3.0"
+    "symfony/phpunit-bridge": "^3.0",
+    "doctrine/doctrine-fixtures-bundle": "^2.3"
   },
   "scripts": {
     "post-install-cmd": [

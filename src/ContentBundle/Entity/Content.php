@@ -2,6 +2,7 @@
 
 namespace ContentBundle\Entity;
 
+use ChannelBundle\Entity\Channel;
 use CoreBundle\Traits\Bleamable;
 use CoreBundle\Traits\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +14,7 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="ContentBundle\Entity\Repository\ContentRepository")
  * @ORM\Table()
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ExclusionPolicy("all")
@@ -35,11 +36,6 @@ class Content
      * @JMS\Groups({"user","mod","admin"})
      */
     protected $id;
-
-    public function __construct()
-    {
-    }
-
 
     /**
      * [min 5 chars, max 150]
@@ -161,6 +157,85 @@ class Content
      * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
      */
     protected $updatedBy;
+
+    /**
+     * Channels list
+     *
+     * @Assert\NotBlank(message = "Field 'channels' should not be blank.")
+     *
+     * @Expose
+     * @JMS\Groups({"user","mod","admin"})
+     * @ORM\ManyToMany(targetEntity="ChannelBundle\Entity\Channel")
+     * @ORM\JoinTable(name="content_channels")
+     */
+    protected $channels;
+
+    /**
+     * Content comments
+     *
+     * @Expose
+     * @JMS\Groups({"user","mod","admin"})
+     * @ORM\OneToMany(targetEntity="ContentBundle\Entity\ContentComment", mappedBy="content")
+     */
+    protected $comments;
+
+    /**
+     * DateTime of deletion. (For PowerUsers only)
+     *
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Expose
+     * @JMS\Groups({"mod","admin"})
+     */
+    protected $deletedAt;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->relatedContent = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->channels = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Sets deletedAt.
+     *
+     * @param \Datetime|null $deletedAt
+     *
+     * @return $this
+     */
+    public function setDeletedAt(\DateTime $deletedAt = null)
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    /**
+     * Returns deletedAt.
+     *
+     * @return \DateTime
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * Is deleted?
+     *
+     * @return bool
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("deleted")
+     * @JMS\Groups({"mod","admin"})
+     */
+    public function isDeleted()
+    {
+        return null !== $this->deletedAt;
+    }
 
     /**
      * Get id
@@ -423,20 +498,6 @@ class Content
     }
 
     /**
-     * Set relatedContent
-     *
-     * @param string $relatedContent
-     *
-     * @return Content
-     */
-    public function setRelatedContent($relatedContent)
-    {
-        $this->relatedContent = $relatedContent;
-
-        return $this;
-    }
-
-    /**
      * Set createdBy
      *
      * @param \UserBundle\Entity\User $createdBy
@@ -482,5 +543,73 @@ class Content
     public function getUpdatedBy()
     {
         return $this->updatedBy;
+    }
+
+    /**
+     * Add channel
+     *
+     * @param \ChannelBundle\Entity\Channel $channel
+     *
+     * @return Content
+     */
+    public function addChannel(\ChannelBundle\Entity\Channel $channel)
+    {
+        $this->channels[] = $channel;
+
+        return $this;
+    }
+
+    /**
+     * Remove channel
+     *
+     * @param \ChannelBundle\Entity\Channel $channel
+     */
+    public function removeChannel(\ChannelBundle\Entity\Channel $channel)
+    {
+        $this->channels->removeElement($channel);
+    }
+
+    /**
+     * Get channels
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getChannels()
+    {
+        return $this->channels;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \ContentBundle\Entity\ContentComment $comment
+     *
+     * @return Content
+     */
+    public function addComment(\ContentBundle\Entity\ContentComment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \ContentBundle\Entity\ContentComment $comment
+     */
+    public function removeComment(\ContentBundle\Entity\ContentComment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

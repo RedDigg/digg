@@ -25,7 +25,7 @@ class DefaultController extends Controller
     /**
      * Array of user entities.
      *
-     * @Rest\Get("/{_format}", defaults = { "_format" = "json" })
+     * @Rest\Get("/.{_format}", defaults = { "_format" = "json" })
      * @Rest\View(serializerGroups={"user","mod","admin"})
      *
      * @ApiDoc(
@@ -61,7 +61,7 @@ class DefaultController extends Controller
     /**
      * Creates a new User entity.
      *
-     * @Rest\Post("/new/{_format}", defaults = { "_format" = "json" })
+     * @Rest\Post("/new/.{_format}", defaults = { "_format" = "json" })
      * @Rest\View(serializerGroups={"user","mod","admin"})
      *
      * @ApiDoc(
@@ -137,18 +137,14 @@ class DefaultController extends Controller
      */
     public function showAction(User $user)
     {
-        if ($user) {
-            $view = View::create()
-                ->setStatusCode(Codes::HTTP_OK)
-                ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
-                ->setTemplate("UserBundle:Default:show.html.twig")
-                ->setTemplateVar('user')
-                ->setData($user);
+        $view = View::create()
+            ->setStatusCode(Codes::HTTP_OK)
+            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
+            ->setTemplate("UserBundle:Default:show.html.twig")
+            ->setTemplateVar('user')
+            ->setData($user);
 
-            return $this->get('fos_rest.view_handler')->handle($view);
-        }
-
-        throw new \NotFoundHttpException();
+        return $this->get('fos_rest.view_handler')->handle($view);
 
     }
 
@@ -184,23 +180,32 @@ class DefaultController extends Controller
      */
     public function editAction(Request $request, User $user)
     {
-        $deleteForm = $this->createDeleteForm($user);
         $editForm = $this->createForm('UserBundle\Form\UserType', $user);
-        $editForm->submit($request->request->all());
+        $editForm->submit($request->request->all(), false);
+
+        $view = View::create()
+            ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('api_user_edit', array('id' => $user->getId()));
+            $view
+                ->setStatusCode(Codes::HTTP_OK)
+                ->setTemplate("UserBundle:Default:show.html.twig")
+                ->setTemplateVar('user')
+                ->setData($user);
+        } else {
+            $view
+                ->setStatusCode(Codes::HTTP_BAD_REQUEST)
+                ->setTemplateVar('error')
+                ->setData($editForm)
+                ->setTemplateData(['message' => $editForm->getErrors(true)])
+                ->setTemplate('UserBundle:Default:show.html.twig');
         }
 
-        return $this->render('user/edit.html.twig', array(
-            'user' => $user,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return $this->get('fos_rest.view_handler')->handle($view);
     }
 
     /**
@@ -224,39 +229,30 @@ class DefaultController extends Controller
      */
     public function deleteAction(Request $request, User $user)
     {
-        $form = $this->createDeleteForm($user);
+        $form = $this->createFormBuilder()->setMethod('DELETE')->getForm();
         $form->submit($request->request->get($form->getName()));
+
+        $view = View::create()
+            ->setSerializationContext(SerializationContext::create()->setGroups(['user']));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($user);
             $em->flush();
 
-            return View::create()
+            $view
                 ->setStatusCode(Codes::HTTP_OK)
-                ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
-                ->setData(['status'=>true]);
+                ->setTemplate("UserBundle::Default:index.html.twig")
+                ->setTemplateVar('contents')
+                ->setData(['status' => true]);
+        } else {
+            $view
+                ->setStatusCode(Codes::HTTP_OK)
+                ->setTemplate("UserBundle:Default:show.html.twig")
+                ->setTemplateVar('contents')
+                ->setData($form);
         }
-
-        return View::create()
-            ->setStatusCode(Codes::HTTP_BAD_REQUEST)
-            ->setSerializationContext(SerializationContext::create()->setGroups(['user']))
-            ->setData($form);
+        return $this->get('fos_rest.view_handler')->handle($view);
     }
 
-    /**
-     * Creates a form to delete a User entity.
-     *
-     * @param User $user The User entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(User $user)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('api_user_delete', array('id' => $user->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
 }

@@ -5,6 +5,7 @@ namespace ChannelBundle\Controller;
 use ChannelBundle\Entity\Channel;
 use ChannelBundle\Form\ChannelType;
 use Doctrine\ORM\EntityManager;
+use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
 use CoreBundle\Controller\BaseController;
@@ -21,35 +22,53 @@ class ChannelController extends BaseController
 
 
     /**
-     * @Rest\Get(
-     *     "/{_format}",
-     *     defaults = { "_format" = "json" }
-     * )
+     * Returns channels list.
+     *
+     * @Rest\Get("/.{_format}", defaults = { "_format" = "json" })
      *
      * @Rest\View(serializerGroups={"user","mod","admin"})
      *
      * @ApiDoc(
      *  resource="/api/channels/",
-     *  description="Returns channels",
+     *  description="Returns all channels",
      *
+     *  output={
+     *   "class"="ChannelBundle\Entity\Channel",
+     *   "parsers"={"Nelmio\ApiDocBundle\Parser\JmsMetadataParser"},
+     *   "groups"={"user","mod","admin"}
+     *  }
      * )
      * @return View
      */
-    public function getChannelsAction()
+    public function indexAction()
     {
-        return View::create()
-            ->setStatusCode(200)
-            ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
-            ->setTemplate("ChannelBundle:Default:list.html.twig")
-            ->setData($this->get('doctrine')->getRepository(Channel::class)->findAll());
+        $em = $this->getDoctrine()->getManager();
+
+        $contents = $em->getRepository(Channel::class)->findAll();
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
+        $view = View::create()
+            ->setStatusCode(Codes::HTTP_OK)
+            ->setTemplate("ChannelBundle:Default:index.html.twig")
+            ->setTemplateVar('channels')
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups))
+            ->setData($contents);
+
+        return $this->get('fos_rest.view_handler')->handle($view);
     }
 
+
     /**
-     * @Rest\Get("/{channel}", requirements={"channel" = "\d+"})
+     * @Rest\Get(
+     *     "/{channel}.{_format}",
+     *     requirements={"channel" = "\d+"},
+     *     defaults = { "_format" = "json" }
+     * )
      * @Rest\View(serializerGroups={"user","mod","admin"})
      * @param Channel $channel
      * @return View
      * @internal param Channel $channel
+     *
      * @ApiDoc(
      *  resource="/api/channels/",
      *  description="Returns channel data",
@@ -61,109 +80,203 @@ class ChannelController extends BaseController
      *  }
      * )
      */
-    public function getChannelAction(Channel $channel)
+    public function showAction(Channel $channel)
     {
-        return View::create()
-            ->setStatusCode(200)
-            ->setFormat('json')
-            ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
+        $view = View::create()
+            ->setStatusCode(Codes::HTTP_OK)
+            ->setTemplate("ChannelBundle:Default:show.html.twig")
+            ->setTemplateVar('channel')
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups))
             ->setData($channel);
+
+        return $this->get('fos_rest.view_handler')->handle($view);
+
     }
 
-    /**
-     * Get a Form instance.
-     *
-     * @param Channel|null $channel
-     * @param string|null  $routeName
-
-     * @return Form
-     */
-    protected function getForm($channel = null, $routeName = null)
-    {
-        $options = array();
-        if (null !== $routeName) {
-            $options['action'] = $this->generateUrl($routeName);
-        }
-        if (null === $channel) {
-            $channel = new Channel(null, null);
-        }
-        return $this->createForm(ChannelType::class, $channel, $options);
-    }
 
     /**
      * Create a new resource.
-     * @Rest\Post("/new")
-     * @Rest\View(serializerGroups={"list"})
+     * @Rest\Post("/new/.{_format}", defaults = { "_format" = "json" })
+     * @Rest\View(serializerGroups={"user","mod","admin"})
      * @param Request $request
      *
      * @return View view instance
      *
      * @ApiDoc(
      *  resource="/api/channels/",
+     *  input={
+     *     "class"="ChannelBundle\Form\ChannelType",
+     *     "name" = ""
+     *  },
+     *  output={
+     *   "class"="ChannelBundle\Entity\Channel",
+     *   "parsers"={"Nelmio\ApiDocBundle\Parser\JmsMetadataParser"},
+     *   "groups"={"user","mod","admin"}
+     *  }
      * )
      */
-    public function postChannelAction(Request $request)
+    public function newAction(Request $request)
     {
-        $form = $this->getForm();
-        $form->handleRequest($request);
-        if ($form->isValid()) {
+        $channel = new Channel();
+        $form = $this->createForm('ChannelBundle\Form\ChannelType', $channel);
+
+        $form->submit($request->request->all());
+
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
+        $view = View::create()
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups));
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($form->getData());
+            $em->persist($channel);
             $em->flush();
-            $view = View::create($form);
-            $view->setTemplate('ChannelBundle:Default:created.html.twig');
+
+            $view->setData($channel)
+                ->setTemplateVar('channel')
+                ->setTemplate('ChannelBundle:Default:show.html.twig');
         } else {
-            $view = View::create($form);
-            $view->setTemplate('ChannelBundle:Default:post.html.twig');
+            $view->setTemplateVar('error')
+                ->setData($form)
+                ->setTemplateData(['message' => $form->getErrors(true)])
+                ->setTemplate('ChannelBundle:Default:post.html.twig');
         }
+
         return $this->get('fos_rest.view_handler')->handle($view);
     }
 
+//    /**
+//     * @Rest\Get("/new")
+//     * @Rest\View(serializerGroups={"list"})
+//     *
+//     * @ApiDoc(
+//     *  description="Display a new channel form",
+//     *  resource="/api/channels/",
+//     * )
+//     */
+//    public function newChannelAction(Request $request)
+//    {
+//        $data = $this->getForm(null, 'channels_new');
+//        $view = new View($data);
+//        $view->setTemplate('ChannelBundle:Default:new.html.twig');
+//        return $this->get('fos_rest.view_handler')->handle($view);
+//    }
+
+
     /**
-     * @Rest\Get("/new")
-     * @Rest\View(serializerGroups={"list"})
+     * Edit an existing Channel entity.
+     *
+     * @Rest\Patch(
+     *     "/{channel}.{_format}",
+     *     requirements={"channel" = "\d+"},
+     *     defaults = { "_format" = "json" }
+     * )
+     *
+     * @Rest\View(serializerGroups={"user","mod","admin"})
+     *
+     * @param Channel $channel
      *
      * @ApiDoc(
-     *  description="Display a new channel form",
      *  resource="/api/channels/",
+     *  description="Updates channel data",
+     *
+     *  input={
+     *     "class"="ChannelBundle\Form\ChannelType",
+     *     "name" = ""
+     *  },
+     *
+     *  output={
+     *   "class"="ChannelBundle\Entity\Channel",
+     *   "parsers"={"Nelmio\ApiDocBundle\Parser\JmsMetadataParser"},
+     *   "groups"={"user","mod","admin"}
+     *  }
+     * )
+     * @return View
+     */
+    public function editAction(Request $request, Channel $channel)
+    {
+        $editForm = $this->createForm('ChannelBundle\Form\ChannelType', $channel);
+        $editForm->submit($request->request->all(), false);
+
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
+        $view = View::create()
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups));
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($channel);
+            $em->flush();
+
+            $view
+                ->setStatusCode(Codes::HTTP_OK)
+                ->setTemplate("ChannelBundle:Default:show.html.twig")
+                ->setTemplateVar('channel')
+                ->setData($channel);
+
+        } else {
+            $view
+                ->setStatusCode(Codes::HTTP_BAD_REQUEST)
+                ->setTemplateVar('error')
+                ->setData($editForm)
+                ->setTemplateData(['message' => $editForm->getErrors(true)])
+                ->setTemplate('ChannelBundle:Default:show.html.twig');
+        }
+
+        return $this->get('fos_rest.view_handler')->handle($view);
+
+    }
+
+    /**
+     * Delete an existing Content entity.
+     *
+     * @Rest\Delete(
+     *     "/{channel}.{_format}",
+     *     requirements={"channel" = "\d+"},
+     *     defaults = { "_format" = "json" }
+     * )
+     *
+     * @Rest\View(serializerGroups={"user","mod","admin"})
+     * @param Channel $channel
+     * @return View
+     * @throws \NotFoundHttpException*
+     *
+     * @ApiDoc(
+     *  resource="/api/channels/",
+     *  description="Deletes content"
      * )
      */
-    public function newChannelAction(Request $request)
+    public function deleteAction(Request $request, Channel $channel)
     {
-        $data = $this->getForm(null, 'channels_new');
-        $view = new View($data);
-        $view->setTemplate('ChannelBundle:Default:new.html.twig');
+        $form = $this->createFormBuilder()->setMethod('DELETE')->getForm();
+        $form->submit($request->request->get($form->getName()));
+
+        $groups = $this->get('user_bundle.user')->getGrantedAPIGroups();
+
+        $view = View::create()
+            ->setSerializationContext(SerializationContext::create()->setGroups($groups));
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($channel);
+            $em->flush();
+
+            $view
+                ->setStatusCode(Codes::HTTP_OK)
+                ->setTemplate("ChannelBundle:Default:index.html.twig")
+                ->setTemplateVar('channels')
+                ->setData(['status' => true]);
+        } else {
+            $view
+                ->setStatusCode(Codes::HTTP_OK)
+                ->setTemplate("ContentBundle:content:index.html.twig")
+                ->setTemplateVar('channels')
+                ->setData($form);
+        }
+
         return $this->get('fos_rest.view_handler')->handle($view);
-    }
 
-
-    /**
-     * @Rest\Put("/{channel}", requirements={"channel" = "\d+"})
-     * @Rest\View(serializerGroups={"list"})
-     * @param Channel $channel
-     * @return View
-     */
-    public function updateChannelAction(Channel $channel)
-    {
-        return View::create()
-            ->setStatusCode(200)
-            ->setFormat('json')
-            ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
-            ->setData($channel);
-    }
-
-    /**
-     * @Rest\Delete("/{channel}", requirements={"channel" = "\d+"})
-     * @Rest\View(serializerGroups={"list"})
-     * @param Channel $channel
-     * @return View
-     */
-    public function deleteChannelAction(Channel $channel)
-    {
-        return View::create()
-            ->setStatusCode(200)
-            ->setFormat('json')
-            ->setSerializationContext(SerializationContext::create()->setGroups(array('list')))
-            ->setData([1]);
     }
 }
